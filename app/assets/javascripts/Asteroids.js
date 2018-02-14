@@ -1,17 +1,16 @@
-/* global Phaser */
-
+/*globals Phaser */
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
     preload: preload, create: create, update: update, render: render
 });
 
 function preload() {
     //Load sprites and images
-    this.load.image("player", "../images/player.png");
+    game.load.image("player", "/assests/images/player.png");
 }
 
 function create(){
     //Game varaibles set up
-    this.Player();
+    var player = Player();
 }
 
 function update(){
@@ -28,7 +27,7 @@ function render() {
 
 
 function Player() {
-    this.player = game.add.sprite(this.world.centerX, this.world.centerY, "player");
+    this.player = game.add.sprite(this.game.world.centerX, this.game.world.centerY, "player");
     this.player.anchor.set(0.5);
     this.player.scale.y = 1;
 }
