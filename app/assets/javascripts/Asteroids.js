@@ -38,5 +38,17 @@ function Player() {
     this.player.scale.y = 1;
 }
 
+function Asteroid(xLocation, yLocation){
+    this.asteroid = game.add.sprite(xLocation, yLocation, "asteroid");
+    this.asteroid.anchor.set(0.5);
+    this.asteroid.scale.y = 1;
+}
+
+function Bullet(xLocation, yLocation){
+    this.asteroid = game.add.sprite(xLocation, yLocation, "bullet");
+    this.asteroid.anchor.set(0.5);
+    this.asteroid.scale.y = 1;
+}
+
 
 
