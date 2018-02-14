@@ -22,3 +22,21 @@ function update(){
 function render() {
     //For rendering
 }
+
+
+
+
+
+
+
+/// Objects
+
+
+function Player() {
+    this.player = game.add.sprite(this.world.centerX, this.world.centerY, "player");
+    this.player.anchor.set(0.5);
+    this.player.scale.y = 1;
+}
+
+
+
