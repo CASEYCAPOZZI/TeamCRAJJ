@@ -6,12 +6,12 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
 
 function preload() {
     //Load sprites and images
-    
+    this.load.image("player", "../images/player.png");
 }
 
 function create(){
     //Game varaibles set up
-    
+    this.Player();
 }
 
 function update(){
@@ -22,11 +22,6 @@ function update(){
 function render() {
     //For rendering
 }
-
-
-
-
-
 
 
 /// Objects
