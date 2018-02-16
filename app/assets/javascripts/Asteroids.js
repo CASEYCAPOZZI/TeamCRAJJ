@@ -5,17 +5,31 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
 
 function preload() {
     //Load sprites and images
-    game.load.image("player", "/assests/images/player.png");
+    game.load.image("player", "/assets/images/player.png");
 }
 
+var cursors;
+
 function create(){
-    //Game varaibles set up
+    //Game variables set up
     var player = Player();
+    
+    // Center the canvas
+    this.game.scale.pageAlignHorizontally = true;
+    this.game.scale.pageAlignVertically = true;
+    this.game.scale.refresh();
+
+    // Enable arcade physics for system and player.
+    game.physics.startSystem(Phaser.Physics.ARCADE);    
+    game.physics.enable(player, Phaser.Physics.ARCADE)
+    
+    // Game input
+    cursors = game.input.keyboard.createCursorKeys();
+    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
 }
 
 function update(){
     //Updates 60 times a second
-    
 }
 
 function render() {
