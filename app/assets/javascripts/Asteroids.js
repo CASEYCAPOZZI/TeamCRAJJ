@@ -5,7 +5,9 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
 
 function preload() {
     //Load sprites and images
-    game.load.image("player", "/assets/images/player.png");
+     imagePath = "/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png";
+    game.load.image("player", imagePath);
+   
 }
 
 var cursors;
