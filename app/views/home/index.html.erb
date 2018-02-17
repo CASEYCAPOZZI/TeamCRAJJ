@@ -4,23 +4,47 @@
     <meta charset="utf-8">
     <title>Asteroids Game</title>
     <%= javascript_include_tag('phaser.min.js') %>
-    <%= javascript_include_tag('Asteroids.js') %>
   </head>
 
   <body>
-
-  <%= image_tag "player.png" %>
     <div id="mainDiv">
-      <h1>Astroids</h1>
       
+    <div id='titleDiv'>
       
-      <div id="userInfoDiv">
-        <h3>User Info</h3>
-      </div
-      <div id="scoreBoardDiv">
-        <h3>High Scores</h3>
-      </div>
+       <img src="/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png" class='imageTitle' alt="Player">
     </div>
+
+    <div id='controlsDiv'>
+      <h3> Controls </h3>
+    </div>
+
+    <div id='canvasDiv'>
+        <%= javascript_include_tag('Asteroids.js') %>
+    </div>
+
+    <div id='gInfoDiv'>
+      <h3> Game Info </h3>
+        <ul>
+            <li> Current Score </li>
+            <li> Lives </li>
+            <li> Power-Ups </li>
+
+
+        </ul>
+    </div>
+
+    <div id="userInfoDiv">
+      <h3>User Info</h3>
+    </div
+
+    <div id="scoreBoardDiv">
+      <h3>High Scores</h3>
+    </div>
+
+    </div> 
+
+    <%= javascript_include_tag('TitleAnimation.js') %>
   </body>
+
 </html>
 
