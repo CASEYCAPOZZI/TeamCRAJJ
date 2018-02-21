@@ -16,8 +16,8 @@ function preload() {
     var spaceShipImagePath = "/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png";
     game.load.image("spaceShip", spaceShipImagePath);
     
-    // TODO: Add bullet image.
-    game.load.image("bullet", spaceShipImagePath);
+    var bulletImagePath = "assets/bullet.png";
+    game.load.image("bullet", bulletImagePath);
    
 }
 
