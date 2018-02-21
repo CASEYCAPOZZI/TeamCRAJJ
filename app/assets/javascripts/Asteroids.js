@@ -177,8 +177,6 @@ function initKeyboard() {
     //Sets the "togglePause" method to be called when the escape key is pressed.
     this.escapeKey.onDown.add(togglePause, this);
     
-    //Set the "fireBullet" method to be called when the space bar is pressed.
-    this.spaceKey.onDown.add(fireBullet, this);
 }
 
 function initGraphics() {
@@ -289,6 +287,10 @@ function checkPlayerInput() {
         spaceShip.body.angularVelocity = 300;
     } else {
         spaceShip.body.angularVelocity = 0;
+    }
+    
+    if (this.spaceKey.isDown) {
+      fireBullet();
     }
 
     game.world.wrap(spaceShip, 16);
