@@ -221,12 +221,15 @@ function spawnAsteroid(){
 function update(){
     game.world.wrap(spaceShip, 16);
     checkPlayerInput();
-    checkCollisions();
-        var rollPerc = Math.floor((Math.random() * 99) + 1);
     
-    if(rollPerc > 90){
+    var rollPerc = Math.floor((Math.random() * 999) + 1);
+    
+    if(rollPerc > 990){
         spawnAsteroid();
     }
+    
+    moveAsteroids();
+    checkCollisions();
 }
 
 function checkPlayerInput() {
@@ -249,9 +252,7 @@ function checkPlayerInput() {
     }
 
     game.world.wrap(spaceShip, 16);
-    moveAsteroids();
     game.world.wrap(bullets, 16); // Trying to get the bullets to wrap around..
-    checkCollisions();
 }
 
 function checkCollisions(){
