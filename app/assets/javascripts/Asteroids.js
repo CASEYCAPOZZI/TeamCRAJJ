@@ -30,11 +30,27 @@ function preload() {
 function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides, velocity, playerLocationX, playerLocationY) {
     
     var vectorX = playerLocationX - xLoc;
+    
+    this.xVecSign = 1;
+    if(vectorX < 0){
+        this.xVecSign = -1;   
+    }
+    
     var vectorY = playerLocationY - yLoc;
+    
+    this.yVecSign = 1;
+    if(vectorY < 0){
+        this.yVecSign = -1;
+    }
     this.vector = vectorY / vectorX;
+    
+    if(this.vector < 0){
+        this.vector *= -1;
+    }
+    
     this.velocity = velocity;
-    this.velocityX = this.velocity * Math.cos(this.vector);
-    this.velocityY = this.velocity * Math.sin(this.vector);
+    this.velocityX = this.velocity * Math.cos(this.vector) * this.xVecSign;
+    this.velocityY = this.velocity * Math.sin(this.vector) * this.yVecSign;
     
     //Creates some properties of the Asteroid Object
     //
@@ -88,6 +104,18 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides, velocity, play
 function moveAsteroids(){
     for(var i = 0; i < asteroids.length; i++){
         moveAsteroid(i, asteroids[i].velocityX * game.time.physicsElapsed, asteroids[i].velocityY * game.time.physicsElapsed);
+        if(asteroids[i].centerPoint.x > game.width){
+            moveAsteroid(i, -game.width, 0);
+        }
+        if(asteroids[i].centerPoint.x < 0){
+            moveAsteroid(i, game.width, 0);
+        }
+        if(asteroids[i].centerPoint.y > game.height){
+            moveAsteroid(i, 0, -game.height);
+        }
+        if(asteroids[i].centerPoint.y < 0){
+            moveAsteroid(i, 0, game.height);
+        }
     }
 }
 
@@ -202,20 +230,26 @@ function spawnAsteroid(){
     var xLoc = 0;
     var yLoc = 0;
     if(side === 0){ //Left
-        xLoc = 0;
+        //xLoc = 0;
+        //yLoc = Math.floor(Math.random() * game.height);
+        xLoc = game.width;
         yLoc = Math.floor(Math.random() * game.height);
     } else if (side === 1){ //Top
-        yLoc = 0;
-        xLoc = Math.floor(Math.random() * game.width);
+        //yLoc = 0;
+        //xLoc = Math.floor(Math.random() * game.width);
+        xLoc = game.width;
+        yLoc = Math.floor(Math.random() * game.height);
     } else if (side === 2) { //Right
         xLoc = game.width;
         yLoc = Math.floor(Math.random() * game.height);
     } else { //Bottom
-        yLoc = game.height;
-        xLoc = Math.floor(Math.random() * game.width);
+        //yLoc = game.height;
+        //xLoc = Math.floor(Math.random() * game.width);
+        xLoc = game.width;
+        yLoc = Math.floor(Math.random() * game.height);
     }
     
-    asteroids[index] = new Asteroid(xLoc, yLoc, 10, 30, 7, Math.floor(Math.random() * (500 - 100)) + 100, spaceShip.x, spaceShip.y);
+    asteroids[index] = new Asteroid(xLoc, yLoc, 10, 50, 12, Math.floor(Math.random() * (500 - 100)) + 100, spaceShip.x, spaceShip.y);
 }
 
 function update(){
@@ -276,6 +310,7 @@ function checkPlayerCollideAsteroid(){
     for(var i = 0; i < this.asteroids.length; i++){
         if(doesPlayerCollideWithAsteroid(this.asteroids[i])){
             //Player collided with asteroid at [i]
+            asteroids.splice(i);
             return true;
         }
     }    
