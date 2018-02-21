@@ -7,16 +7,14 @@ var spaceShip;
 var asteroids = [];
 var bullets = [];
 var powerups = [];
+var score;
 
 function preload() {
     //Load sprites and images
     var spaceShipImagePath = "/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png";
     game.load.image("spaceShip", spaceShipImagePath);
    
-
 }
-
-
 
 //This function creates an Asteroid object. To create one you must specify a few things:
 //
@@ -75,24 +73,18 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides) {
     
 }
 
-
-function create(){
+function initPhysics() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
     
-    //Adds the sprint(spaceShip)
-    spaceShip = game.add.sprite(400, 300, 'spaceShip');
-    spaceShip.anchor.setTo(0.5, 0.5);
-    spaceShip.name = 'spaceShip';
-
-     //  Enable Arcade Physics for the sprite
+    //  Enable Arcade Physics for the sprite
     game.physics.enable(spaceShip, Phaser.Physics.ARCADE);
-
+    
     //Makes it so the sprint doesn't go really fast and slows down
     spaceShip.body.drag.set(70);
     spaceShip.body.maxVelocity.set(200);
-   
+}
 
+function initKeyboard() {
     //Creates a property that allows for arrowKey movement.
     this.cursors = game.input.keyboard.createCursorKeys();
     
@@ -114,10 +106,20 @@ function create(){
     
     //Set the "fireBullet" method to be called when the space bar is pressed.
     this.spaceKey.onDown.add(fireBullet, this);
+}
+
+function initGraphics() {
+    //Adds the sprite(spaceShip)
+    spaceShip = game.add.sprite(400, 300, 'spaceShip');
+    spaceShip.anchor.setTo(0.5, 0.5);
+    spaceShip.name = 'spaceShip';
+}
+
+function create(){
     
-    
-    
-    
+    initGraphics();
+    initPhysics();
+    initKeyboard();
     //This is just temporary. Once everyone undertands what it's doing, we'll
     //actually create an array of astroids and fill it as we go along.
     //In this example, though. I'm creating an asteroid centered at the point 300, 200.
@@ -127,8 +129,6 @@ function create(){
     //after you load the game. On each refresh, the asteroid will be generated differently.
     this.asteroid = new Asteroid(300, 200, 10, 100, 10);
     
-    
-
 }
 
 
@@ -143,12 +143,17 @@ function togglePause() {
 }
 
 function fireBullet() {
-    
+  
 }
 
 function update(){
-    
-    //Pressing UpArrow or W
+    game.world.wrap(spaceShip, 16);
+    checkPlayerInput();
+    checkCollisions();
+}
+
+function checkPlayerInput() {
+        //Pressing UpArrow or W
     if (this.cursors.up.isDown || this.wasd.up.isDown) {
         game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
     } else {
@@ -165,9 +170,6 @@ function update(){
     } else {
         spaceShip.body.angularVelocity = 0;
     }
-
-    game.world.wrap(spaceShip, 16);
-    checkCollisions();
 }
 
 function checkCollisions(){
@@ -225,7 +227,7 @@ function polyContainsPoint(point, poly){
 }
 
 function colDetectUsingRaycasting(ray, sides){
-    	var intersections = 0;
+    var intersections = 0;
 		for (var i = 0; i < sides.length; i++) {
 			if (doLinesIntersect(ray, sides[i])) {
 				intersections++;
@@ -322,8 +324,8 @@ function checkPlayerCollidePowerup(){
 }
 
 //A function that checks to see if a bullet collides with an asteroid.
-function checkBulletColls(){
-    
+function checkBulletColls() {
+     
 }
 
 function render() {
