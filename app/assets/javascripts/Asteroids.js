@@ -24,7 +24,14 @@ function preload() {
 //minDistance: the smallest number of pixels you want an edge of the asteroid to get to the center point
 //maxDistance: the largest number of pixels you want an edge of the asteroid to get from the center point
 //numSides: the number of sides you want the asteroid to have. MUST be a minimum of 3
-function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides) {
+function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides, velocity, playerLocationX, playerLocationY) {
+    
+    var vectorX = playerLocationX - xLoc;
+    var vectorY = playerLocationY - yLoc;
+    this.vector = vectorY / vectorX;
+    this.velocity = velocity;
+    this.velocityX = this.velocity * Math.cos(this.vector);
+    this.velocityY = this.velocity * Math.sin(this.vector);
     
     //Creates some properties of the Asteroid Object
     //
@@ -75,6 +82,30 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides) {
     
 }
 
+function moveAsteroids(){
+    for(var i = 0; i < asteroids.length; i++){
+        moveAsteroid(i, asteroids[i].velocityX * game.time.physicsElapsed, asteroids[i].velocityY * game.time.physicsElapsed);
+    }
+}
+
+function moveAsteroid(asteroidIndex, xMove, yMove){
+    asteroids[asteroidIndex].centerPoint.x += xMove;
+    asteroids[asteroidIndex].centerPoint.y += yMove;
+    
+    for(var i = 0; i < asteroids[asteroidIndex].points.length; i++){
+        asteroids[asteroidIndex].points[i].x += xMove;
+        asteroids[asteroidIndex].points[i].y += yMove;
+    }
+    
+    for(i = 0; i < asteroids[asteroidIndex].points.length; i++){
+        if(i < asteroids[asteroidIndex].points.length - 1){
+            asteroids[asteroidIndex].lines[i] = new Phaser.Line(asteroids[asteroidIndex].points[i].x, asteroids[asteroidIndex].points[i].y, asteroids[asteroidIndex].points[i+1].x, asteroids[asteroidIndex].points[i+1].y);
+        } else {
+            asteroids[asteroidIndex].lines[i] = new Phaser.Line(asteroids[asteroidIndex].points[i].x, asteroids[asteroidIndex].points[i].y, asteroids[asteroidIndex].points[0].x, asteroids[asteroidIndex].points[0].y);
+        }
+    }
+}
+
 
 function create(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -113,20 +144,7 @@ function create(){
     this.escapeKey.onDown.add(togglePause, this);
     
     //Set the "fireBullet" method to be called when the space bar is pressed.
-    this.spaceKey.onDown.add(fireBullet, this);
-    
-    
-    
-    
-    //This is just temporary. Once everyone undertands what it's doing, we'll
-    //actually create an array of astroids and fill it as we go along.
-    //In this example, though. I'm creating an asteroid centered at the point 300, 200.
-    //It's got a minimum vertex height of 10px and a max vertex height of 100.
-    //I also made it have 10 sides.
-    //You can see the generator in action by refreshing the page a few times
-    //after you load the game. On each refresh, the asteroid will be generated differently.
-    this.asteroid = new Asteroid(300, 200, 10, 100, 10);
-    
+    this.spaceKey.onDown.add(fireBullet, this);   
     
 
 }
@@ -146,7 +164,35 @@ function fireBullet() {
     
 }
 
+function spawnAsteroid(){
+    var side = Math.floor(Math.random() * 4);
+    var index = asteroids.length;
+    var xLoc = 0;
+    var yLoc = 0;
+    if(side === 0){ //Left
+        xLoc = 0;
+        yLoc = Math.floor(Math.random() * game.height);
+    } else if (side === 1){ //Top
+        yLoc = 0;
+        xLoc = Math.floor(Math.random() * game.width);
+    } else if (side === 2) { //Right
+        xLoc = game.width;
+        yLoc = Math.floor(Math.random() * game.height);
+    } else { //Bottom
+        yLoc = game.height;
+        xLoc = Math.floor(Math.random() * game.width);
+    }
+    
+    asteroids[index] = new Asteroid(xLoc, yLoc, 10, 30, 7, Math.floor(Math.random() * (500 - 100)) + 100, spaceShip.x, spaceShip.y);
+}
+
 function update(){
+    
+    var rollPerc = Math.floor((Math.random() * 99) + 1);
+    
+    if(rollPerc > 90){
+        spawnAsteroid();
+    }
     
     //Pressing UpArrow or W
     if (this.cursors.up.isDown || this.wasd.up.isDown) {
@@ -167,6 +213,7 @@ function update(){
     }
 
     game.world.wrap(spaceShip, 16);
+    moveAsteroids();
     checkCollisions();
 }
 
@@ -328,13 +375,15 @@ function checkBulletColls(){
 
 function render() {
     //Painting the example asteroid.
-    paintAsteroid(this.asteroid);
+    paintAsteroids();
 }
 
 //A function that takes in an Asteroid object and paints all of the lines within it.
-function paintAsteroid(asteroid){
-    for(var i = 0; i < asteroid.lines.length; i++){
-        game.debug.geom(asteroid.lines[i], 'rgba(255,255,255,1)');
+function paintAsteroids(){
+    for(var j = 0; j < asteroids.length; j++){
+        for(var i = 0; i < asteroids[j].lines.length; i++){
+            game.debug.geom(asteroids[j].lines[i], 'rgba(255,255,255,1)');
+        }
     }
 }
 
