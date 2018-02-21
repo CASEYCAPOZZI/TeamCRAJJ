@@ -214,8 +214,7 @@ function fireBullet() {
         bullet = bullets.getFirstExists(false);
         
         if (bullet) {
-            
-            bullet.reset(spaceShip.body.x, spaceShip.body.y);
+            bullet.reset(spaceShip.x, spaceShip.y);
             bullet.lifespan = 2000;
             bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
             game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
@@ -223,6 +222,8 @@ function fireBullet() {
         }
     }
 }
+
+
 
 function spawnAsteroid(){
     var side = Math.floor(Math.random() * 4);
@@ -253,7 +254,12 @@ function spawnAsteroid(){
 }
 
 function update(){
-    game.world.wrap(spaceShip, 16);
+    game.world.wrap(spaceShip, 0);
+    
+    bullets.forEach(function(item) {
+        game.world.wrap(item, 0);
+    });
+    
     checkPlayerInput();
     
     var rollPerc = Math.floor((Math.random() * 999) + 1);
@@ -296,7 +302,24 @@ function checkCollisions(){
 
 //A function that checks to see if a bullet collides with an asteroid.
 function checkBulletColls() {
-     
+    bullets.forEach(function(item) {
+        if(checkBulletCollideAsteroid(item)){
+            //Bullet collided with an asteroid
+            bullets.remove(item);
+        }
+    });
+}
+
+function checkBulletCollideAsteroid(bullet){
+        for(var i = 0; i < this.asteroids.length; i++){
+        if(doesBulletCollideWithAsteroid(bullet, this.asteroids[i])){
+            //Bullet collided with asteroid at [i]
+            //Add to score
+            asteroids.splice(i, 1);
+            return true;
+        }
+    }    
+    return false;
 }
 
 
@@ -321,6 +344,11 @@ function checkPlayerCollideAsteroid(){
         }
     }    
     return false;
+}
+
+function doesBulletCollideWithAsteroid(bull, aster){
+    var bullPts = [new Point(bull.x, bull.y), new Point(bull.x + bull.width, bull.y), new Point(bull.x + bull.width, bull.y + bull.height), new Point(bull.x, bull.y + bull.height)];
+    return polygonIntersectsPolygon(aster.points, bullPts);
 }
 
 function doesPlayerCollideWithAsteroid(aster){
