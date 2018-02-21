@@ -7,16 +7,19 @@ var spaceShip;
 var asteroids = [];
 var bullets = [];
 var powerups = [];
+var bullet;
+var bulletTime = 0;
+var score;
 
 function preload() {
     //Load sprites and images
     var spaceShipImagePath = "/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png";
     game.load.image("spaceShip", spaceShipImagePath);
+    
+    // TODO: Add bullet image.
+    game.load.image("bullet", spaceShipImagePath);
    
-
 }
-
-
 
 //This function creates an Asteroid object. To create one you must specify a few things:
 //
@@ -106,24 +109,27 @@ function moveAsteroid(asteroidIndex, xMove, yMove){
     }
 }
 
-
-function create(){
+function initPhysics() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    // Add bullets
+    bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(40, 'bullet');
+    bullets.setAll('anchor.x', 0.5);
+    bullets.setAll('anchor.y', 0.5);
     
-    //Adds the sprint(spaceShip)
-    spaceShip = game.add.sprite(400, 300, 'spaceShip');
-    spaceShip.anchor.setTo(0.5, 0.5);
-    spaceShip.name = 'spaceShip';
-
-     //  Enable Arcade Physics for the sprite
+    
+    //  Enable Arcade Physics for the sprite
     game.physics.enable(spaceShip, Phaser.Physics.ARCADE);
-
+    
     //Makes it so the sprint doesn't go really fast and slows down
     spaceShip.body.drag.set(70);
     spaceShip.body.maxVelocity.set(200);
-   
+}
 
+function initKeyboard() {
     //Creates a property that allows for arrowKey movement.
     this.cursors = game.input.keyboard.createCursorKeys();
     
@@ -144,9 +150,22 @@ function create(){
     this.escapeKey.onDown.add(togglePause, this);
     
     //Set the "fireBullet" method to be called when the space bar is pressed.
-    this.spaceKey.onDown.add(fireBullet, this);   
-    
+    this.spaceKey.onDown.add(fireBullet, this);
+}
 
+function initGraphics() {
+    //Adds the sprite(spaceShip)
+    spaceShip = game.add.sprite(400, 300, 'spaceShip');
+    spaceShip.anchor.setTo(0.5, 0.5);
+    spaceShip.name = 'spaceShip';
+}
+
+function create(){
+    
+    initGraphics();
+    initPhysics();
+    initKeyboard();
+    
 }
 
 
@@ -162,6 +181,19 @@ function togglePause() {
 
 function fireBullet() {
     
+    if (game.time.now > bulletTime) {
+        
+        bullet = bullets.getFirstExists(false);
+        
+        if (bullet) {
+            
+            bullet.reset(spaceShip.body.x, spaceShip.body.y);
+            bullet.lifespan = 2000;
+            bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
+            game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
+            bulletTime = game.time.now + 100;
+        }
+    }
 }
 
 function spawnAsteroid(){
@@ -187,14 +219,18 @@ function spawnAsteroid(){
 }
 
 function update(){
-    
-    var rollPerc = Math.floor((Math.random() * 99) + 1);
+    game.world.wrap(spaceShip, 16);
+    checkPlayerInput();
+    checkCollisions();
+        var rollPerc = Math.floor((Math.random() * 99) + 1);
     
     if(rollPerc > 90){
         spawnAsteroid();
     }
-    
-    //Pressing UpArrow or W
+}
+
+function checkPlayerInput() {
+        //Pressing UpArrow or W
     if (this.cursors.up.isDown || this.wasd.up.isDown) {
         game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
     } else {
@@ -214,6 +250,7 @@ function update(){
 
     game.world.wrap(spaceShip, 16);
     moveAsteroids();
+    game.world.wrap(bullets, 16); // Trying to get the bullets to wrap around..
     checkCollisions();
 }
 
@@ -272,7 +309,7 @@ function polyContainsPoint(point, poly){
 }
 
 function colDetectUsingRaycasting(ray, sides){
-    	var intersections = 0;
+    var intersections = 0;
 		for (var i = 0; i < sides.length; i++) {
 			if (doLinesIntersect(ray, sides[i])) {
 				intersections++;
@@ -369,8 +406,8 @@ function checkPlayerCollidePowerup(){
 }
 
 //A function that checks to see if a bullet collides with an asteroid.
-function checkBulletColls(){
-    
+function checkBulletColls() {
+     
 }
 
 function render() {
