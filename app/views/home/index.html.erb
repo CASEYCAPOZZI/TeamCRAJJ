@@ -18,31 +18,31 @@
       <h3> Controls </h3>
     </div>
 
-    <div id='canvasDiv'>
-        <%= javascript_include_tag('Asteroids.js') %>
-    </div>
-
-    <div id='gInfoDiv'>
-      <h3> Game Info </h3>
-        <ul>
-            <li> Current Score </li>
-            <li> Lives </li>
-            <li> Power-Ups </li>
-
-
-        </ul>
+    <div id="canvasParent">
+      <div id="phaser-example">
+        <div id='gInfoDiv'>
+          <h3> Game Info </h3>
+            <ul>
+                <li> Current Score </li>
+                <li> Lives </li>
+                <li> Power-Ups </li>
+            </ul>
+        </div>
+      </div>
     </div>
 
     <div id="userInfoDiv">
       <h3>User Info</h3>
-    </div
+    </div>
 
     <div id="scoreBoardDiv">
       <h3>High Scores</h3>
     </div>
 
-    </div> 
+    <%= javascript_include_tag('Asteroids.js') %>
 
+    </div> 
+    
     <%= javascript_include_tag('TitleAnimation.js') %>
   </body>
 
