@@ -294,6 +294,11 @@ function checkCollisions(){
     checkBulletColls();
 }
 
+//A function that checks to see if a bullet collides with an asteroid.
+function checkBulletColls() {
+     
+}
+
 
 //A function that checks to see if the player collides with asteroids or powerups.
 function checkPlayerColls(){
@@ -310,7 +315,8 @@ function checkPlayerCollideAsteroid(){
     for(var i = 0; i < this.asteroids.length; i++){
         if(doesPlayerCollideWithAsteroid(this.asteroids[i])){
             //Player collided with asteroid at [i]
-            asteroids.splice(i);
+            console.log(i);
+            asteroids.splice(i, 1);
             return true;
         }
     }    
@@ -439,11 +445,6 @@ function getMaxAndMinPolygon(poly){
 function checkPlayerCollidePowerup(){
     
     return false;
-}
-
-//A function that checks to see if a bullet collides with an asteroid.
-function checkBulletColls() {
-     
 }
 
 function render() {
