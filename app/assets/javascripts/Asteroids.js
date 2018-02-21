@@ -7,11 +7,16 @@ var spaceShip;
 var asteroids = [];
 var bullets = [];
 var powerups = [];
+var bullet;
+var bulletTime = 0;
 
 function preload() {
     //Load sprites and images
     var spaceShipImagePath = "/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png";
     game.load.image("spaceShip", spaceShipImagePath);
+    
+    // TODO: Add bullet image.
+    game.load.image("bullet", spaceShipImagePath);
    
 
 }
@@ -79,6 +84,14 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides) {
 function create(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    // Add bullets
+    bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(40, 'bullet');
+    bullets.setAll('anchor.x', 0.5);
+    bullets.setAll('anchor.y', 0.5);
+    
     
     //Adds the sprint(spaceShip)
     spaceShip = game.add.sprite(400, 300, 'spaceShip');
@@ -126,8 +139,6 @@ function create(){
     //You can see the generator in action by refreshing the page a few times
     //after you load the game. On each refresh, the asteroid will be generated differently.
     this.asteroid = new Asteroid(300, 200, 10, 100, 10);
-    
-    
 
 }
 
@@ -144,6 +155,19 @@ function togglePause() {
 
 function fireBullet() {
     
+    if (game.time.now > bulletTime) {
+        
+        bullet = bullets.getFirstExists(false);
+
+        if (bullet) {
+            
+            bullet.reset(spaceShip.body.x, spaceShip.body.y);
+            bullet.lifespan = 2000;
+            bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
+            game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
+            bulletTime = game.time.now + 100;
+        }
+    }
 }
 
 function update(){
@@ -167,6 +191,7 @@ function update(){
     }
 
     game.world.wrap(spaceShip, 16);
+    game.world.wrap(bullets, 16); // Trying to get the bullets to wrap around..
     checkCollisions();
 }
 
