@@ -12,9 +12,6 @@ function preload() {
    
 
 }
-
-
-
 //This function creates an Asteroid object. To create one you must specify a few things:
 //
 //xLoc and yLoc: the center point of the asteroid.
