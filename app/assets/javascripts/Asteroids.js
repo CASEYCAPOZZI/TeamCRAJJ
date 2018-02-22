@@ -9,7 +9,9 @@ var bullets = [];
 var powerups = [];
 var bullet;
 var bulletTime = 0;
-var score;
+ var score = 0; 
+
+
 
 function preload() {
     //Load sprites and images
@@ -270,6 +272,9 @@ function update(){
     
     moveAsteroids();
     checkCollisions();
+    
+
+   
 }
 
 function checkPlayerInput() {
@@ -316,6 +321,7 @@ function checkBulletCollideAsteroid(bullet){
             //Bullet collided with asteroid at [i]
             //Add to score
             asteroids.splice(i, 1);
+            updateScore();
             return true;
         }
     }    
@@ -487,5 +493,12 @@ function paintAsteroids(){
             game.debug.geom(asteroids[j].lines[i], 'rgba(255,255,255,1)');
         }
     }
+}
+
+function updateScore(){
+   
+    score = score + 10;
+    var Sscore = score.toString();
+    $('#gameScore').html("Score: " + Sscore);
 }
 
