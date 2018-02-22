@@ -20,6 +20,17 @@ function preload() {
     
     var bulletImagePath = "assets/bullet.png";
     game.load.image("bullet", bulletImagePath);
+    
+    var apowerupPath = "assets/powerups/ammoPowerup.png";
+    game.load.image("ammoPower", apowerupPath);
+    var bulletPowerupPath = "assets/powerups/bulletPowerup.png";
+    game.load.image("bulletPower", bulletPowerupPath);
+    var bulletSpeedPath = "assets/powerups/bulletSpeed.png";
+    game.load.image("bulletSpeedPower", bulletSpeedPath);
+    var healthPowerupPath = "assets/powerups/healthPowerup.png";
+    game.load.image("healthPower", healthPowerupPath);
+    var speedPowerupPath = "assets/powerups/speedUp.png";
+    game.load.image("shipSpeedPower", speedPowerupPath);
    
 }
 
@@ -118,6 +129,12 @@ function moveAsteroids(){
         if(asteroids[i].centerPoint.y < 0){
             moveAsteroid(i, 0, game.height);
         }
+    }
+}
+
+function movePowerups(){
+    for(var i = 0; i < powerups.length; i++){
+        game.physics.arcade.accelerationFromRotation(powerups[i].sprite.rotation, 300, powerups[i].sprite.body.acceleration);
     }
 }
 
@@ -225,7 +242,60 @@ function fireBullet() {
     }
 }
 
+function spawnPowerup(){
+    var index = powerups.length;
+    powerups[index] = new powerUp(Math.floor(Math.random() * 5));
+}
 
+function powerUp(type){
+    this.locX = 0;
+    this.locY = 0;
+    this.name = "ammoPower";
+    this.type = type;
+    
+    switch (this.type) {
+        case 0:
+            this.name = "ammoPower";
+            break;
+        case 1:
+            this.name = "bulletPower";
+            break;
+        case 2:
+            this.name = "bulletSpeedPower";
+            break;
+        case 3:
+            this.name = "healthPower";
+            break;
+        case 4:
+            this.name = "shipSpeedPower";
+            break;
+    }
+    
+    
+    var side = Math.floor(Math.random() * 4);
+    if(side === 0){ //Left
+        this.locX = 0;
+        this.locY = Math.floor(Math.random() * game.height);
+    } else if (side === 1){ //Top
+        this.locY = 0;
+        this.locX = Math.floor(Math.random() * game.width);
+    } else if (side === 2) { //Right
+        this.locX = game.width;
+        this.locY = Math.floor(Math.random() * game.height);
+    } else { //Bottom
+        this.locY = game.height;
+        this.locX = Math.floor(Math.random() * game.width);
+    }
+    
+    this.sprite = game.add.sprite(this.locX, this.locY, this.name);
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.rotation = Math.random() * (Math.PI * 2);
+    this.sprite.name = this.name;
+    this.sprite.lifespan = 3000;
+    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    this.sprite.body.drag.set(70);
+    this.sprite.body.maxVelocity.set(500);
+}
 
 function spawnAsteroid(){
     var side = Math.floor(Math.random() * 4);
@@ -233,23 +303,17 @@ function spawnAsteroid(){
     var xLoc = 0;
     var yLoc = 0;
     if(side === 0){ //Left
-        //xLoc = 0;
-        //yLoc = Math.floor(Math.random() * game.height);
-        xLoc = game.width;
+        xLoc = 0;
         yLoc = Math.floor(Math.random() * game.height);
     } else if (side === 1){ //Top
-        //yLoc = 0;
-        //xLoc = Math.floor(Math.random() * game.width);
-        xLoc = game.width;
-        yLoc = Math.floor(Math.random() * game.height);
+        yLoc = 0;
+        xLoc = Math.floor(Math.random() * game.width);
     } else if (side === 2) { //Right
         xLoc = game.width;
         yLoc = Math.floor(Math.random() * game.height);
     } else { //Bottom
-        //yLoc = game.height;
-        //xLoc = Math.floor(Math.random() * game.width);
-        xLoc = game.width;
-        yLoc = Math.floor(Math.random() * game.height);
+        yLoc = game.height;
+        xLoc = Math.floor(Math.random() * game.width);
     }
     
     asteroids[index] = new Asteroid(xLoc, yLoc, 10, 50, 12, Math.floor(Math.random() * (500 - 100)) + 100, spaceShip.x, spaceShip.y);
@@ -262,6 +326,10 @@ function update(){
         game.world.wrap(item, 0);
     });
     
+    powerups.forEach(function(item){
+        game.world.wrap(item.sprite, 0);
+    });
+    
     checkPlayerInput();
     
     var rollPerc = Math.floor((Math.random() * 999) + 1);
@@ -270,7 +338,15 @@ function update(){
         spawnAsteroid();
     }
     
+<<<<<<< HEAD
     moveAsteroids();
+=======
+    if(rollPerc > 600 && rollPerc < 620){
+        spawnPowerup();
+    }
+    movePowerups();
+    moveAsteroids();
+>>>>>>> f567c9ed7fa626143c6715af1c755b0ce03be003
     checkCollisions();
     
 
