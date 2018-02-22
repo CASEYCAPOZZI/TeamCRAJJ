@@ -497,7 +497,7 @@ function paintAsteroids(){
 
 function updateScore(){
    
-    score = score + 10;
+    score += 10;
     var Sscore = score.toString();
     $('#gameScore').html("Score: " + Sscore);
 }
