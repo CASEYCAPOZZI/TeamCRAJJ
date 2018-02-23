@@ -4,6 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
 });
 
 var spaceShip;
+var lives;
 var asteroids = [];
 var bullets = [];
 var powerups = [];
@@ -148,7 +149,6 @@ function initPhysics() {
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
     
-    
     //  Enable Arcade Physics for the sprite
     game.physics.enable(spaceShip, Phaser.Physics.ARCADE);
     
@@ -193,6 +193,16 @@ function create(){
     initGraphics();
     initPhysics();
     initKeyboard();
+    
+    // Add lives
+    lives = game.add.group();
+    game.add.text(game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
+    
+    for (var i = 0; i < 3; i++) {
+        var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'spaceShip');
+        ship.anchor.setTo(0.5, 0.5);
+        ship.angle = 0;
+    }
     
 }
 
@@ -327,11 +337,35 @@ function checkBulletCollideAsteroid(bullet){
 function checkPlayerColls(){
     if(checkPlayerCollideAsteroid()){
         //Player collided with an asteroid
+        var live = lives.getFirstAlive();
+        
+        if (live) {
+            live.kill();
+            spaceShip.reset(400, 300);
+        }
+        
+        if (lives.countLiving() < 1) {
+            spaceShip.kill();
+
+            //the "click to restart" handler
+            game.input.onTap.addOnce(restart,this);
+        }
     }
     
     if(checkPlayerCollidePowerup()){
         //Player collided with powerup
     }
+}
+
+function restart () {
+
+    //  A new level starts
+    
+    //resets the life count
+    lives.callAll('revive');
+    //revives the player
+    spaceShip.revive();
+
 }
 
 function checkPlayerCollideAsteroid(){
