@@ -9,7 +9,10 @@ var bullets = [];
 var powerups = [];
 var bullet;
 var bulletTime = 0;
- var score = 0; 
+var score = 0;
+var lives = 3; 
+
+
 
 
 
@@ -20,7 +23,7 @@ function preload() {
     
     var bulletImagePath = "assets/bullet.png";
     game.load.image("bullet", bulletImagePath);
-    
+
     var apowerupPath = "assets/powerups/ammoPowerup.png";
     game.load.image("ammoPower", apowerupPath);
     var bulletPowerupPath = "assets/powerups/bulletPowerup.png";
@@ -62,8 +65,8 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides, velocity, play
     }
     
     this.velocity = velocity;
-    this.velocityX = this.velocity * Math.cos(this.vector) * this.xVecSign;
-    this.velocityY = this.velocity * Math.sin(this.vector) * this.yVecSign;
+    this.velocityX = (this.velocity * Math.cos(this.vector) * this.xVecSign)/2.5;
+    this.velocityY = (this.velocity * Math.sin(this.vector) * this.yVecSign)/2.5;
     
     //Creates some properties of the Asteroid Object
     //
@@ -134,7 +137,7 @@ function moveAsteroids(){
 
 function movePowerups(){
     for(var i = 0; i < powerups.length; i++){
-        game.physics.arcade.accelerationFromRotation(powerups[i].sprite.rotation, 300, powerups[i].sprite.body.acceleration);
+        game.physics.arcade.accelerationFromRotation(powerups[i].sprite.rotation, 75, powerups[i].sprite.body.acceleration);
     }
 }
 
@@ -163,7 +166,7 @@ function initPhysics() {
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    bullets.createMultiple(40, 'bullet');
+    bullets.createMultiple(40, 'bullet'); // original   bullets.createMultiple(40, 'bullet');
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
     
@@ -197,7 +200,7 @@ function initKeyboard() {
     this.escapeKey.onDown.add(togglePause, this);
     
     //Set the "fireBullet" method to be called when the space bar is pressed.
-    this.spaceKey.onDown.add(fireBullet, this);
+    this.spaceKey.onDown.add(fireBullet, this); 
 }
 
 function initGraphics() {
@@ -224,6 +227,7 @@ function Point(x, y){
 
 function togglePause() {
     game.physics.arcade.isPaused = !game.physics.arcade.isPaused;
+   
 }
 
 function fireBullet() {
@@ -238,8 +242,19 @@ function fireBullet() {
             bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
             game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
             bulletTime = game.time.now + 100;
+            
+            console.log(bullet.lifespan);
+ 
         }
     }
+     updateBullets();
+      console.log(bullet.lifespan + "2");
+      if(bullet.lifespan == 0){
+           bullets.remove();
+
+      }
+
+     
 }
 
 function spawnPowerup(){
@@ -338,16 +353,18 @@ function update(){
         spawnAsteroid();
     }
     
-<<<<<<< HEAD
-    moveAsteroids();
-=======
+//HEAD
+   
+        moveAsteroids();
+       
+
     if(rollPerc > 600 && rollPerc < 620){
         spawnPowerup();
     }
     movePowerups();
     moveAsteroids();
->>>>>>> f567c9ed7fa626143c6715af1c755b0ce03be003
     checkCollisions();
+
     
 
    
@@ -388,6 +405,7 @@ function checkBulletColls() {
             //Bullet collided with an asteroid
             bullets.remove(item);
         }
+        
     });
 }
 
@@ -409,10 +427,13 @@ function checkBulletCollideAsteroid(bullet){
 function checkPlayerColls(){
     if(checkPlayerCollideAsteroid()){
         //Player collided with an asteroid
+        updateLife();
+
     }
     
     if(checkPlayerCollidePowerup()){
         //Player collided with powerup
+        //starfruit
     }
 }
 
@@ -420,7 +441,7 @@ function checkPlayerCollideAsteroid(){
     for(var i = 0; i < this.asteroids.length; i++){
         if(doesPlayerCollideWithAsteroid(this.asteroids[i])){
             //Player collided with asteroid at [i]
-            console.log(i);
+            //console.log(i);
             asteroids.splice(i, 1);
             return true;
         }
@@ -553,7 +574,7 @@ function getMaxAndMinPolygon(poly){
 
 
 function checkPlayerCollidePowerup(){
-    
+    // starfruit
     return false;
 }
 
@@ -572,9 +593,37 @@ function paintAsteroids(){
 }
 
 function updateScore(){
-   
     score += 10;
-    var Sscore = score.toString();
-    $('#gameScore').html("Score: " + Sscore);
+    var stringScore = score.toString();
+    $('#gameScore').html("Your Score: " + stringScore);
+}
+
+function updateLife(){
+    lives -= 1;
+    var stringLives = lives.toString();
+    if(lives === 0){
+        // to end the game because you ran out of lives call method or add that code here.
+    }
+    $('#gameLives').html("You have " + stringLives + " lives." );
+}
+
+function updateBullets(){
+bulletsLeft = bullets.length;
+var stringBullets = bulletsLeft.toString();
+ $('#bulletsLeft').html("You have " + stringBullets + " left." );
+
+}
+
+function bulletDeath(){
+
+bullets.forEach(function(item) {
+        if(bullets.lifespan(item) == 0){
+            //Bullet collided with an asteroid
+            bullets.remove(item);
+        }
+        
+    });
+
+
 }
 
