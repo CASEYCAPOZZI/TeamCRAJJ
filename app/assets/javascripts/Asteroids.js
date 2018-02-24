@@ -215,11 +215,10 @@ function create(){
     initGraphics();
     initPhysics();
     initKeyboard();
-<<<<<<< HEAD
-=======
+
     
     // Add lives
-    lives = game.add.group();
+   /* lives = game.add.group();
     game.add.text(game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
     
     for (var i = 0; i < 3; i++) {
@@ -227,8 +226,8 @@ function create(){
         ship.anchor.setTo(0.5, 0.5);
         ship.angle = 0;
     }
->>>>>>> f37874f4fb7266d8b8d99ba2c5f2c07eea8a7613
-    
+
+    */
 }
 
 
@@ -440,11 +439,11 @@ function checkBulletCollideAsteroid(bullet){
 function checkPlayerColls(){
     if(checkPlayerCollideAsteroid()){
         //Player collided with an asteroid
-<<<<<<< HEAD
+
         updateLife();
 
-=======
-        var live = lives.getFirstAlive();
+
+      /*  var live = lives.getFirstAlive();
         
         if (live) {
             live.kill();
@@ -457,7 +456,7 @@ function checkPlayerColls(){
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
         }
->>>>>>> f37874f4fb7266d8b8d99ba2c5f2c07eea8a7613
+        */
     }
     
     if(checkPlayerCollidePowerup()){
@@ -471,7 +470,7 @@ function restart () {
     //  A new level starts
     
     //resets the life count
-    lives.callAll('revive');
+    //lives.callAll('revive');
     //revives the player
     spaceShip.revive();
 
@@ -654,16 +653,8 @@ var stringBullets = bulletsLeft.toString();
 
 }
 
-function bulletDeath(){
-
-bullets.forEach(function(item) {
-        if(bullets.lifespan(item) == 0){
-            //Bullet collided with an asteroid
-            bullets.remove(item);
-        }
-        
-    });
 
 
-}
+
+
 
