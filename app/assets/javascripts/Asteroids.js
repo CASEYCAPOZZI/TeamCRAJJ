@@ -641,7 +641,7 @@ function updateLife(){
     lives -= 1;
     var stringLives = lives.toString();
     if(lives === 0){
-        // to end the game because you ran out of lives call method or add that code here.
+        // to end the game because you ran out of lives call method or add that code here...
     }
     $('#gameLives').html("You have " + stringLives + " lives." );
 }
