@@ -5,6 +5,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
 
 var spaceShip;
 var lives;
+var gameOverText;
 var asteroids = [];
 var bullets = [];
 var powerups = [];
@@ -188,22 +189,28 @@ function initGraphics() {
     spaceShip.name = 'spaceShip';
 }
 
-function create(){
-    
-    initGraphics();
-    initPhysics();
-    initKeyboard();
-    
+function initPlayerLives() {
     // Add lives
     lives = game.add.group();
-    game.add.text(game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
+    game.add.text(game.world.width - 115, 10, 'Lives : ', { font: '34px Arial', fill: '#990000' });
     
     for (var i = 0; i < 3; i++) {
         var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'spaceShip');
         ship.anchor.setTo(0.5, 0.5);
         ship.angle = 0;
     }
+}
+
+function create(){  
+    initGraphics();
+    initPhysics();
+    initKeyboard();
     
+    initPlayerLives();
+    
+    gameOverText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '60px Arial', fill: '#9999ff' });
+    gameOverText.anchor.setTo(0.5, 0.5);
+    gameOverText.visible = false;
 }
 
 
@@ -337,6 +344,7 @@ function checkBulletCollideAsteroid(bullet){
 function checkPlayerColls(){
     if(checkPlayerCollideAsteroid()){
         //Player collided with an asteroid
+        
         var live = lives.getFirstAlive();
         
         if (live) {
@@ -346,9 +354,12 @@ function checkPlayerColls(){
         
         if (lives.countLiving() < 1) {
             spaceShip.kill();
-
+            
+            gameOverText.text="   Game Over! \n Click to restart";
+            gameOverText.visible = true;
+            
             //the "click to restart" handler
-            game.input.onTap.addOnce(restart,this);
+            game.input.onTap.addOnce(restartGame,this);
         }
     }
     
@@ -357,15 +368,10 @@ function checkPlayerColls(){
     }
 }
 
-function restart () {
-
-    //  A new level starts
-    
-    //resets the life count
+function restartGame () {   
     lives.callAll('revive');
-    //revives the player
     spaceShip.revive();
-
+    gameOverText.visible = false;
 }
 
 function checkPlayerCollideAsteroid(){
