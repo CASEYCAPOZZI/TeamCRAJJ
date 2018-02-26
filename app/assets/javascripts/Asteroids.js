@@ -11,7 +11,7 @@ var bullets = [];
 var powerups = [];
 var bullet;
 var bulletTime = 0;
-var score;
+var score = 0;
 
 function preload() {
     //Load sprites and images
@@ -20,6 +20,17 @@ function preload() {
     
     var bulletImagePath = "assets/bullet.png";
     game.load.image("bullet", bulletImagePath);
+
+    var apowerupPath = "assets/powerups/ammoPowerup.png";
+    game.load.image("ammoPower", apowerupPath);
+    var bulletPowerupPath = "assets/powerups/bulletPowerup.png";
+    game.load.image("bulletPower", bulletPowerupPath);
+    var bulletSpeedPath = "assets/powerups/bulletSpeed.png";
+    game.load.image("bulletSpeedPower", bulletSpeedPath);
+    var healthPowerupPath = "assets/powerups/healthPowerup.png";
+    game.load.image("healthPower", healthPowerupPath);
+    var speedPowerupPath = "assets/powerups/speedUp.png";
+    game.load.image("shipSpeedPower", speedPowerupPath);
    
 }
 
@@ -51,8 +62,8 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides, velocity, play
     }
     
     this.velocity = velocity;
-    this.velocityX = this.velocity * Math.cos(this.vector) * this.xVecSign;
-    this.velocityY = this.velocity * Math.sin(this.vector) * this.yVecSign;
+    this.velocityX = (this.velocity * Math.cos(this.vector) * this.xVecSign)/2.5;
+    this.velocityY = (this.velocity * Math.sin(this.vector) * this.yVecSign)/2.5;
     
     //Creates some properties of the Asteroid Object
     //
@@ -121,6 +132,12 @@ function moveAsteroids(){
     }
 }
 
+function movePowerups(){
+    for(var i = 0; i < powerups.length; i++){
+        game.physics.arcade.accelerationFromRotation(powerups[i].sprite.rotation, 75, powerups[i].sprite.body.acceleration);
+    }
+}
+
 function moveAsteroid(asteroidIndex, xMove, yMove){
     asteroids[asteroidIndex].centerPoint.x += xMove;
     asteroids[asteroidIndex].centerPoint.y += yMove;
@@ -146,7 +163,7 @@ function initPhysics() {
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    bullets.createMultiple(40, 'bullet');
+    bullets.createMultiple(40, 'bullet'); // original   bullets.createMultiple(40, 'bullet');
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
     
@@ -179,7 +196,7 @@ function initKeyboard() {
     this.escapeKey.onDown.add(togglePause, this);
     
     //Set the "fireBullet" method to be called when the space bar is pressed.
-    this.spaceKey.onDown.add(fireBullet, this);
+    this.spaceKey.onDown.add(fireBullet, this); 
 }
 
 function initGraphics() {
@@ -213,7 +230,6 @@ function create(){
     gameOverText.visible = false;
 }
 
-
 //An object that allows us to store points in one variable.
 function Point(x, y){
     this.x = x;
@@ -222,6 +238,7 @@ function Point(x, y){
 
 function togglePause() {
     game.physics.arcade.isPaused = !game.physics.arcade.isPaused;
+   
 }
 
 function fireBullet() {
@@ -236,11 +253,75 @@ function fireBullet() {
             bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
             game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
             bulletTime = game.time.now + 100;
+            
+            console.log(bullet.lifespan);
+ 
         }
     }
+     updateBullets();
+      console.log(bullet.lifespan + "2");
+      if(bullet.lifespan == 0){
+           bullets.remove();
+
+      }
+
+     
 }
 
+function spawnPowerup(){
+    var index = powerups.length;
+    powerups[index] = new powerUp(Math.floor(Math.random() * 5));
+}
 
+function powerUp(type){
+    this.locX = 0;
+    this.locY = 0;
+    this.name = "ammoPower";
+    this.type = type;
+    
+    switch (this.type) {
+        case 0:
+            this.name = "ammoPower";
+            break;
+        case 1:
+            this.name = "bulletPower";
+            break;
+        case 2:
+            this.name = "bulletSpeedPower";
+            break;
+        case 3:
+            this.name = "healthPower";
+            break;
+        case 4:
+            this.name = "shipSpeedPower";
+            break;
+    }
+    
+    
+    var side = Math.floor(Math.random() * 4);
+    if(side === 0){ //Left
+        this.locX = 0;
+        this.locY = Math.floor(Math.random() * game.height);
+    } else if (side === 1){ //Top
+        this.locY = 0;
+        this.locX = Math.floor(Math.random() * game.width);
+    } else if (side === 2) { //Right
+        this.locX = game.width;
+        this.locY = Math.floor(Math.random() * game.height);
+    } else { //Bottom
+        this.locY = game.height;
+        this.locX = Math.floor(Math.random() * game.width);
+    }
+    
+    this.sprite = game.add.sprite(this.locX, this.locY, this.name);
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.rotation = Math.random() * (Math.PI * 2);
+    this.sprite.name = this.name;
+    this.sprite.lifespan = 3000;
+    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    this.sprite.body.drag.set(70);
+    this.sprite.body.maxVelocity.set(500);
+}
 
 function spawnAsteroid(){
     var side = Math.floor(Math.random() * 4);
@@ -248,23 +329,17 @@ function spawnAsteroid(){
     var xLoc = 0;
     var yLoc = 0;
     if(side === 0){ //Left
-        //xLoc = 0;
-        //yLoc = Math.floor(Math.random() * game.height);
-        xLoc = game.width;
+        xLoc = 0;
         yLoc = Math.floor(Math.random() * game.height);
     } else if (side === 1){ //Top
-        //yLoc = 0;
-        //xLoc = Math.floor(Math.random() * game.width);
-        xLoc = game.width;
-        yLoc = Math.floor(Math.random() * game.height);
+        yLoc = 0;
+        xLoc = Math.floor(Math.random() * game.width);
     } else if (side === 2) { //Right
         xLoc = game.width;
         yLoc = Math.floor(Math.random() * game.height);
     } else { //Bottom
-        //yLoc = game.height;
-        //xLoc = Math.floor(Math.random() * game.width);
-        xLoc = game.width;
-        yLoc = Math.floor(Math.random() * game.height);
+        yLoc = game.height;
+        xLoc = Math.floor(Math.random() * game.width);
     }
     
     asteroids[index] = new Asteroid(xLoc, yLoc, 10, 50, 12, Math.floor(Math.random() * (500 - 100)) + 100, spaceShip.x, spaceShip.y);
@@ -277,6 +352,10 @@ function update(){
         game.world.wrap(item, 0);
     });
     
+    powerups.forEach(function(item){
+        game.world.wrap(item.sprite, 0);
+    });
+    
     checkPlayerInput();
     
     var rollPerc = Math.floor((Math.random() * 999) + 1);
@@ -285,8 +364,21 @@ function update(){
         spawnAsteroid();
     }
     
+//HEAD
+   
+        moveAsteroids();
+       
+
+    if(rollPerc > 600 && rollPerc < 620){
+        spawnPowerup();
+    }
+    movePowerups();
     moveAsteroids();
     checkCollisions();
+
+    
+
+   
 }
 
 function checkPlayerInput() {
@@ -324,6 +416,7 @@ function checkBulletColls() {
             //Bullet collided with an asteroid
             bullets.remove(item);
         }
+        
     });
 }
 
@@ -333,6 +426,7 @@ function checkBulletCollideAsteroid(bullet){
             //Bullet collided with asteroid at [i]
             //Add to score
             asteroids.splice(i, 1);
+            updateScore();
             return true;
         }
     }    
@@ -361,10 +455,12 @@ function checkPlayerColls(){
             //the "click to restart" handler
             game.input.onTap.addOnce(restartGame,this);
         }
+        //updateLife();
     }
     
     if(checkPlayerCollidePowerup()){
         //Player collided with powerup
+        //starfruit
     }
 }
 
@@ -378,7 +474,7 @@ function checkPlayerCollideAsteroid(){
     for(var i = 0; i < this.asteroids.length; i++){
         if(doesPlayerCollideWithAsteroid(this.asteroids[i])){
             //Player collided with asteroid at [i]
-            console.log(i);
+            //console.log(i);
             asteroids.splice(i, 1);
             return true;
         }
@@ -511,7 +607,7 @@ function getMaxAndMinPolygon(poly){
 
 
 function checkPlayerCollidePowerup(){
-    
+    // starfruit
     return false;
 }
 
@@ -528,4 +624,32 @@ function paintAsteroids(){
         }
     }
 }
+
+function updateScore(){
+    score += 10;
+    var stringScore = score.toString();
+    $('#gameScore').html("Your Score: " + stringScore);
+}
+
+/*
+function updateLife(){
+    lives -= 1;
+    var stringLives = lives.toString();
+    if(lives === 0){
+        // to end the game because you ran out of lives call method or add that code here...
+    }
+    $('#gameLives').html("You have " + stringLives + " lives." );
+}
+*/
+function updateBullets(){
+bulletsLeft = bullets.length;
+var stringBullets = bulletsLeft.toString();
+ $('#bulletsLeft').html("You have " + stringBullets + " left." );
+
+}
+
+
+
+
+
 
