@@ -258,14 +258,11 @@ function fireBullet() {
  
         }
     }
-     updateBullets();
       console.log(bullet.lifespan + "2");
       if(bullet.lifespan == 0){
            bullets.remove();
 
-      }
-
-     
+      }    
 }
 
 function spawnPowerup(){
@@ -363,10 +360,8 @@ function update(){
     if(rollPerc > 990){
         spawnAsteroid();
     }
-    
-//HEAD
    
-        moveAsteroids();
+    moveAsteroids();
        
 
     if(rollPerc > 600 && rollPerc < 620){
@@ -376,9 +371,6 @@ function update(){
     moveAsteroids();
     checkCollisions();
 
-    
-
-   
 }
 
 function checkPlayerInput() {
@@ -455,7 +447,6 @@ function checkPlayerColls(){
             //the "click to restart" handler
             game.input.onTap.addOnce(restartGame,this);
         }
-        //updateLife();
     }
     
     if(checkPlayerCollidePowerup()){
@@ -631,22 +622,6 @@ function updateScore(){
     $('#gameScore').html("Your Score: " + stringScore);
 }
 
-/*
-function updateLife(){
-    lives -= 1;
-    var stringLives = lives.toString();
-    if(lives === 0){
-        // to end the game because you ran out of lives call method or add that code here...
-    }
-    $('#gameLives').html("You have " + stringLives + " lives." );
-}
-*/
-function updateBullets(){
-bulletsLeft = bullets.length;
-var stringBullets = bulletsLeft.toString();
- $('#bulletsLeft').html("You have " + stringBullets + " left." );
-
-}
 
 
 
