@@ -28,7 +28,69 @@
   right: 0;
 }
 
+#canvasParent{
+  order: 2;
+  width: 800px;
+  height: 600px;
+  margin: auto;
+}
 
+#phaser-example {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+canvas {
+    position: absolute;
+}
+
+#gInfoDiv{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
+
+#controlsDiv{
+  order: 2;
+  flex-grow: 1;
+}
+
+#userInfoDiv {
+  order: 3;
+  flex-grow: 1;
+}
+
+#scoreBoardDiv {
+  order: 4;
+
+}
+
+@media (max-width: 1150px) {
+    
+    #controlsDiv{
+      width: 100%;
+    }
+    
+    #userInfoDiv{
+      width: 50%;
+    }
+    
+    #scoreBoardDiv{
+      width: 50%
+    }
+}
+
+@media (min-width: 1151px) and (max-width: 1300px) {
+    
+    #scoreBoardDiv{
+      width: 100%;
+    }
+}
+
+/*
 #controlsDiv{
   order: 2;
   flex-grow: 1;
@@ -39,6 +101,7 @@
   width: 800px;
   height: 600px;
   align-self: center;
+  justify-content: center;
 }
 
 #phaser-example {
@@ -67,3 +130,4 @@ canvas {
   order: 4;
   flex-grow: 1;
 }
+*/
