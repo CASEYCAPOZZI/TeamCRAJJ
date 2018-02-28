@@ -418,7 +418,7 @@ function checkBulletColls() {
         if(checkBulletCollideAsteroid(item)){
             //Bullet collided with an asteroid
             bullets.remove(item);
-            console.log('Bullet collision function');
+//            console.log('Bullet collision function');
         }
         
     });
@@ -644,7 +644,7 @@ function updateBullets(){
     bulletsLeft -= 1;// removes one bullet everytime this function is called.
     
     if(bulletsLeft > -1){
-     console.log(bulletsLeft);
+//     console.log(bulletsLeft);
         stringBulletsLeft = bulletsLeft.toString();
         $('#bulletsLeft').html('You Have: ' + stringBulletsLeft + ' left.' );
     }
