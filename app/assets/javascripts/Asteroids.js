@@ -3,14 +3,18 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
     preload: preload, create: create, update: update, render: render
 });
 
-game.state.add("menu", menuState);
-game.state.start("menu");
+
+var state = 0;
+var stateJustSwitched = true;
 
 var spaceShip;
 var asteroids = [];
 var bullets = [];
 var bullet;
 var bulletTime = 0;
+
+var titleLabel;
+var startLabel;
 
 function preload() {
     //Load sprites and images
@@ -184,15 +188,18 @@ function initKeyboard() {
 
 function initGraphics() {
     //Adds the sprite(spaceShip)
+    
     spaceShip = game.add.sprite(400, 300, 'spaceShip');
     spaceShip.anchor.setTo(0.5, 0.5);
     spaceShip.name = 'spaceShip';
 }
 
 function create(){
-    
-    initGraphics();
-    initPhysics();
+    if(state === 1){
+        initGraphics();
+        initPhysics();
+    }
+
     initKeyboard();
     
 }
@@ -209,17 +216,26 @@ function togglePause() {
 }
 
 function fireBullet() {
-    
-    if (game.time.now > bulletTime) {
-        
-        bullet = bullets.getFirstExists(false);
-        
-        if (bullet) {
-            bullet.reset(spaceShip.x, spaceShip.y);
-            bullet.lifespan = 2000;
-            bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
-            game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
-            bulletTime = game.time.now + 100;
+    if(state === 0){
+        //remove stuff
+        titleLabel.destroy();
+        startLabel.destroy();
+        stateJustSwitched = true;
+        state = 1;
+    } else {
+        if(!game.physics.arcade.isPaused){
+            if (game.time.now > bulletTime) {
+                
+                bullet = bullets.getFirstExists(false);
+                
+                if (bullet) {
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = 2000;
+                    bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+            }
         }
     }
 }
@@ -232,68 +248,96 @@ function spawnAsteroid(){
     var xLoc = 0;
     var yLoc = 0;
     if(side === 0){ //Left
-        //xLoc = 0;
-        //yLoc = Math.floor(Math.random() * game.height);
-        xLoc = game.width;
+        xLoc = 0;
         yLoc = Math.floor(Math.random() * game.height);
     } else if (side === 1){ //Top
-        //yLoc = 0;
-        //xLoc = Math.floor(Math.random() * game.width);
-        xLoc = game.width;
-        yLoc = Math.floor(Math.random() * game.height);
+        yLoc = 0;
+        xLoc = Math.floor(Math.random() * game.width);
     } else if (side === 2) { //Right
         xLoc = game.width;
         yLoc = Math.floor(Math.random() * game.height);
     } else { //Bottom
-        //yLoc = game.height;
-        //xLoc = Math.floor(Math.random() * game.width);
-        xLoc = game.width;
-        yLoc = Math.floor(Math.random() * game.height);
+        yLoc = game.height;
+        xLoc = Math.floor(Math.random() * game.width);
     }
     
     asteroids[index] = new Asteroid(xLoc, yLoc, 10, 50, 12, Math.floor(Math.random() * (500 - 100)) + 100, spaceShip.x, spaceShip.y);
 }
 
 function update(){
-    game.world.wrap(spaceShip, 0);
     
-    bullets.forEach(function(item) {
-        game.world.wrap(item, 0);
-    });
+    if(state === 0){
+        //Menu State
+        if(stateJustSwitched){
+            stateJustSwitched = false;
+            titleLabel = game.add.text(220, 80, "Asteroid Shooter", {font: "50px Arial", fill: "#fff"});
+            startLabel = game.add.text(250, 300, "Press the space bar to start!", {font: "25px Arial", fill: "#fff"});
+        }
+    } else {
+        //Game State
+        
+        if(stateJustSwitched){
+            stateJustSwitched = false;
+            create();
+        }
+        
+        
+         game.world.wrap(spaceShip, 0);
     
-    checkPlayerInput();
+        bullets.forEach(function(item) {
+            game.world.wrap(item, 0);
+        });
+        
+         checkPlayerInput();
+        
     
-    var rollPerc = Math.floor((Math.random() * 999) + 1);
+            if(!game.physics.arcade.isPaused){
+                        
+               
+                
+                var rollPerc = Math.floor((Math.random() * 999) + 1);
+                
+                if(rollPerc > 990){
+                    spawnAsteroid();
+                }
+            
+                moveAsteroids();
+                checkCollisions();
+            }
+
+        
+        }
     
-    if(rollPerc > 990){
-        spawnAsteroid();
-    }
-    
-    moveAsteroids();
-    checkCollisions();
+   
 }
 
 function checkPlayerInput() {
         //Pressing UpArrow or W
-    if (this.cursors.up.isDown || this.wasd.up.isDown) {
-        game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
-    } else {
-        spaceShip.body.acceleration.set(0);
-    }
-
-    //Pressing LeftArrow or A
-    if (this.cursors.left.isDown || this.wasd.left.isDown) {
-        spaceShip.body.angularVelocity = -300;
+    if(state === 0){
         
-    //Pressing RightArrow or D
-    } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
-        spaceShip.body.angularVelocity = 300;
     } else {
-        spaceShip.body.angularVelocity = 0;
+        if (this.cursors.up.isDown || this.wasd.up.isDown) {
+            game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
+        } else {
+            spaceShip.body.acceleration.set(0);
+        }
+    
+        //Pressing LeftArrow or A
+        if (this.cursors.left.isDown || this.wasd.left.isDown) {
+            spaceShip.body.angularVelocity = -300;
+            
+        //Pressing RightArrow or D
+        } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
+            spaceShip.body.angularVelocity = 300;
+        } else {
+            spaceShip.body.angularVelocity = 0;
+        }
+    
+        game.world.wrap(spaceShip, 16);
+        game.world.wrap(bullets, 16); // Trying to get the bullets to wrap around..
     }
+        
 
-    game.world.wrap(spaceShip, 16);
-    game.world.wrap(bullets, 16); // Trying to get the bullets to wrap around..
 }
 
 function checkCollisions(){
