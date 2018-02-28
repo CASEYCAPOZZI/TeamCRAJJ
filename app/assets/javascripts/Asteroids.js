@@ -16,6 +16,7 @@ var powerups = [];
 var bullet;
 var bulletTime = 0;
 var score = 0;
+var gameGoing = true;
 
 function preload() {
     //Load sprites and images
@@ -412,19 +413,22 @@ function update(){
     
     var rollPerc = Math.floor((Math.random() * 999) + 1);
     
-    if(rollPerc > 990){
-        spawnAsteroid();
-    }
-   
-    moveAsteroids();
-       
+    if(gameGoing){ 
+        if(rollPerc > 990){
+            spawnAsteroid();
+        }
+    
+        moveAsteroids();
+        
 
-    if(rollPerc > 600 && rollPerc < 620){
-       // spawnPowerup();
-    }
-    movePowerups();
-    moveAsteroids();
-    checkCollisions();
+        if(rollPerc > 600 && rollPerc < 620){
+        // spawnPowerup();
+        }
+        movePowerups();
+        moveAsteroids();
+        checkCollisions();
+        
+    };// end of gameGoing
 
 }
 
@@ -497,6 +501,7 @@ function checkPlayerColls(){
         
         if (lives.countLiving() < 1) {
             spaceShip.kill();
+            gameGoing = false;
             
             gameOverText.text="   Game Over! \n Click to restart";
             gameOverText.visible = true;
@@ -521,8 +526,6 @@ function restartGame () {
 function checkPlayerCollideAsteroid(){
     for(var i = 0; i < this.asteroids.length; i++){
         if(doesPlayerCollideWithAsteroid(this.asteroids[i])){
-            //Player collided with asteroid at [i]
-            //console.log(i);
             asteroids.splice(i, 1);
             return true;
         }
@@ -659,6 +662,7 @@ function checkPlayerCollidePowerup(){
     return false;
 }
 
+//DO we neeed this function?
 function render() {
     //Painting the example asteroid.
     paintAsteroids();
@@ -686,7 +690,7 @@ function updateBullets(){
     var bulletsLeft = bullets.length;
     var stringBullets = bulletsLeft.toString();
     $('#bulletsLeft').html("You Have: " + stringBullets + ' left.' );
-    console.log("updateB");
+  //  console.log("updateB");
 }
 
 function bulletDeath(){
