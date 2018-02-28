@@ -413,7 +413,7 @@ function update(){
     
     var rollPerc = Math.floor((Math.random() * 999) + 1);
     
-    if(gameGoing){ 
+    if(gameGoing){  // boolean flag check to see if you are out of lives. If so then the asteroids stop moving
         if(rollPerc > 990){
             spawnAsteroid();
         }
@@ -521,6 +521,8 @@ function restartGame () {
     lives.callAll('revive');
     spaceShip.revive();
     gameOverText.visible = false;
+    gameGoing = true;
+    newGameInfo(); 
 }
 
 function checkPlayerCollideAsteroid(){
@@ -687,12 +689,19 @@ function updateScore(){
 }
 
 function updateBullets(){
+    //This shows how many bullets you have left on the HTML side of things. Currently not displayed because 
+    // of bugs. 
     var bulletsLeft = bullets.length;
     var stringBullets = bulletsLeft.toString();
     $('#bulletsLeft').html("You Have: " + stringBullets + ' left.' );
   //  console.log("updateB");
 }
 
+function newGameInfo(){
+    //Updates the HTML side of the game info so it "resets" when the reset is pressed at the end of the game.
+    score = 0;
+    $('#gameScore').html("Your Score: " + score);
+}
 function bulletDeath(){
     Phaser.Weapon.KILL_DISTANCE = 10;
 }
