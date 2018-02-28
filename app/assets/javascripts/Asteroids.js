@@ -3,13 +3,14 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
     preload: preload, create: create, update: update, render: render
 });
 
+game.state.add("menu", menuState);
+game.state.start("menu");
+
 var spaceShip;
 var asteroids = [];
 var bullets = [];
-var powerups = [];
 var bullet;
 var bulletTime = 0;
-var score;
 
 function preload() {
     //Load sprites and images
