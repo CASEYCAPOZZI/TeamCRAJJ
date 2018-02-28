@@ -17,6 +17,7 @@ var bullet;
 var bulletTime = 0;
 var score = 0;
 var gameGoing = true;
+var bulletsLeft = 40;
 
 function preload() {
     //Load sprites and images
@@ -246,77 +247,27 @@ function togglePause() {
    
 }
 
-
-
-/*
-function fireBullet2(){
-    
-    Phaser.Weapon.prototype.createBullets = function (quantity, key, frame, group) {
-
-    if (quantity === undefined) { quantity = 40; }
-    if (group === undefined) { group = this.game.world; }
-
-    if (!this.bullets)
-    {
-        this.bullets = this.game.add.physicsGroup(Phaser.Physics.ARCADE, group);
-        this.bullets.classType = this._bulletClass;
-    }
-
-    if (quantity !== 0)
-    {
-        if (quantity === -1)
-        {
-            this.autoExpandBulletsGroup = false;
-            quantity = 1;
-        }
-
-        this.bullets.createMultiple(quantity, key, frame);
-
-        this.bullets.setAll('data.bulletManager', this);
-
-        this.bulletKey = key;
-        this.bulletFrame = frame;
-    }
-
-    return this;
-
-}; //End of Phaser.Weapon.prototype.createBullets
-
-Phaser.Weapon.prototype.forEach = function (callback, callbackContext) {
-
-    this.bullets.forEachExists(callback, callbackContext, arguments);
-
-    return this;
-
-};//End of Phaser.Weapon.prototype.forEach
-
-
-};
-
-
-*/
-
-
-
 function fireBullet() {
     
-    if (game.time.now > bulletTime) {
-        
-        bullet = this.bullets.getFirstExists(false);
-        
-        if (bullet) {
-            bullet.reset(spaceShip.x, spaceShip.y);
-            bullet.lifespan = 2000;
-            bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
-            game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
-            bulletTime = game.time.now + 100;
+    if(bulletsLeft > 0){
+        if (game.time.now > bulletTime) {
+            
+            bullet = this.bullets.getFirstExists(false);
+            
+            if (bullet) {
+                bullet.reset(spaceShip.x, spaceShip.y);
+                bullet.lifespan = 2000;
+                bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
+                game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
+                bulletTime = game.time.now + 100;
+                updateBullets();
+            }
         }
     }
-     // console.log(bullet.lifespan + "2");
+    
      if (bullet.lifespan == 0){
            bullets.remove();
-           // call a function to update how many bullets you have left in the Game Info
-           starfish
+         
       }   
      
 }
@@ -427,6 +378,7 @@ function update(){
         movePowerups();
         moveAsteroids();
         checkCollisions();
+       
         
     };// end of gameGoing
 
@@ -466,8 +418,7 @@ function checkBulletColls() {
         if(checkBulletCollideAsteroid(item)){
             //Bullet collided with an asteroid
             bullets.remove(item);
-            updateBullets();
-           // console.log('Bullet collision function');
+            console.log('Bullet collision function');
         }
         
     });
@@ -689,19 +640,21 @@ function updateScore(){
 }
 
 function updateBullets(){
-    //This shows how many bullets you have left on the HTML side of things. Currently not displayed because 
-    // of bugs. 
-    var bulletsLeft = bullets.length;
-    var stringBullets = bulletsLeft.toString();
-    $('#bulletsLeft').html("You Have: " + stringBullets + ' left.' );
-  //  console.log("updateB");
+    //This shows how many bullets you have left on the HTML side of things.
+    bulletsLeft -= 1;// removes one bullet everytime this function is called.
+    
+    if(bulletsLeft > -1){
+     console.log(bulletsLeft);
+        stringBulletsLeft = bulletsLeft.toString();
+        $('#bulletsLeft').html('You Have: ' + stringBulletsLeft + ' left.' );
+    }
+    
+  
 }
 
 function newGameInfo(){
     //Updates the HTML side of the game info so it "resets" when the reset is pressed at the end of the game.
     score = 0;
     $('#gameScore').html("Your Score: " + score);
-}
-function bulletDeath(){
-    Phaser.Weapon.KILL_DISTANCE = 10;
+
 }
