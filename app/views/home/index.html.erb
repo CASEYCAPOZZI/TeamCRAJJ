@@ -4,47 +4,73 @@
     <meta charset="utf-8">
     <title>Asteroids Game</title>
     <%= javascript_include_tag('phaser.min.js') %>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+      
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </head>
 
   <body>
     <div id="mainDiv">
       
-    <div id='titleDiv'>
-      
-       <img src="/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png" class='imageTitle' alt="Player">
-    </div>
-
-    <div id='controlsDiv'>
-      <h3> Controls </h3>
-    </div>
-
-    <div id='canvasDiv'>
-        <%= javascript_include_tag('Asteroids.js') %>
-    </div>
-
-    <div id='gInfoDiv'>
-      <h3> Game Info </h3>
-        <ul>
-            <li> Current Score </li>
-            <li> Lives </li>
-            <li> Power-Ups </li>
-
-
-        </ul>
-    </div>
-
-    <div id="userInfoDiv">
-      <h3>User Info</h3>
-    </div
-
-    <div id="scoreBoardDiv">
-      <h3>High Scores</h3>
-    </div>
-
+        <div id='titleDiv'>
+            <img src="/assets/Asteroid.jpg" class='imageAsteroid' alt="Asteroid."><p>Asteroids</p>
+           <img src="/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png" class='imageTitle' alt="Player">
+           
+           <span id='bullet'></span>
+            <span id='bullet'></span>
+            <span id='bullet'></span>
+            <span id='bullet'></span>
+    
+            <span id='bullet2'></span>
+            <span id='bullet2'></span>
+            <span id='bullet2'></span>
+            <span id='bullet2'></span>
+        </div>
+    
+        <div id='controlsDiv'>
+          <h3> Controls </h3>
+            <ul>
+                <li>Fowards: W Key or Up Arrow</li>
+                <li>Left: A Key or Left Arrow</li>
+                <li>Right: D Key or Right Arrow</li>
+                <li>Shoot: Spacebar</li>
+                <li>Pause: Escape Key</li>
+            </ul>
+        </div>
+        <div id="canvasParent">
+          <div id="phaser-example">
+            <div id='gInfoDiv'>
+              
+            </div>
+          </div>
+        </div>
+    
+        <div id="userInfoDiv">
+            <h3> Game Info </h3>
+            <ul>
+                <li id="gameScore">Your Score: 0</li>
+                <!--<li> Power-Ups </li> -->
+                <li id="bulletsLeft">You have: 40 bullets</li> 
+            </ul>
+        </div>
+    
+        <div id="scoreBoardDiv">
+          <h3>High Scores</h3>
+        </div>
+        
+        <div>
+          <% if current_user %>
+            Signed in as <strong><%= current_user.name %></strong>!
+            <%= link_to "Sign out", signout_path, id: "sign_out" %>
+          <% else %>
+            <%= link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in" %>
+          <% end %>
+        </div>
     </div> 
+    
+    <%= javascript_include_tag('Asteroids.js') %>
 
-    <%= javascript_include_tag('TitleAnimation.js') %>
   </body>
-
 </html>
-
