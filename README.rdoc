@@ -35,4 +35,9 @@ Please feel free to use a different markup language if you do not plan to run
 
 - Austin Kaiser
 
+Google Authentication:
+
+CLIENT ID: 520928464543-vd94r6734gcn7inu805pesd0f8no645a.apps.googleusercontent.com
+CLIENT SECRET: iV2e_nAHY7duSai7NOQYTuvt
+
 - Jon Fehr
