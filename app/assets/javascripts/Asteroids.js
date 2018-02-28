@@ -246,7 +246,7 @@ function fireBullet() {
     
     if (game.time.now > bulletTime) {
         
-        bullet = bullets.getFirstExists(false);
+        bullet = this.bullets.getFirstExists(false);
         
         if (bullet) {
             bullet.reset(spaceShip.x, spaceShip.y);
@@ -254,16 +254,15 @@ function fireBullet() {
             bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
             game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
             bulletTime = game.time.now + 100;
-            
-            console.log(bullet.lifespan);
- 
         }
     }
-      console.log(bullet.lifespan + "2");
-      if(bullet.lifespan == 0){
+     // console.log(bullet.lifespan + "2");
+     if (bullet.lifespan == 0){
            bullets.remove();
-
-      }    
+           // call a function to update how many bullets you have left in the Game Info
+           
+      }   
+     
 }
 
 function spawnPowerup(){
@@ -408,6 +407,8 @@ function checkBulletColls() {
         if(checkBulletCollideAsteroid(item)){
             //Bullet collided with an asteroid
             bullets.remove(item);
+            updateBullets();
+           // console.log('Bullet collision function');
         }
         
     });
@@ -619,7 +620,20 @@ function paintAsteroids(){
 }
 
 function updateScore(){
+    //This function updates the score by 10 everytime there is a collision between a bullet
+    // and an asteroid.
     score += 10;
     var stringScore = score.toString();
     $('#gameScore').html("Your Score: " + stringScore);
+}
+
+function updateBullets(){
+    var bulletsLeft = bullets.length;
+    var stringBullets = bulletsLeft.toString();
+    $('#bulletsLeft').html("You Have: " + stringBullets + ' left.' );
+    console.log("updateB");
+}
+
+function bulletDeath(){
+
 }

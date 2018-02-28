@@ -73,7 +73,10 @@
   width: 20.5%;
   height: 600px;
   float: left;
- 
+}
+
+#controlsDiv > h3{
+   text-align: center;
 }
 
 #phaser-example{
@@ -108,6 +111,10 @@ canvas {
 #userInfoDiv {
   order: 3;
   flex-grow: 1;
+}
+
+#userInfoDiv > h3{
+   text-align: center;
 }
 
 #scoreBoardDiv {
