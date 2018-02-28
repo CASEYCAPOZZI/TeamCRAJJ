@@ -14,55 +14,45 @@
   <body>
     <div id="mainDiv">
       
-    <div id='titleDiv'>
-      
-       <img src="/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png" class='imageTitle' alt="Player">
-    </div>
-
-    <div id='controlsDiv'>
-      <h3> Controls </h3>
-    </div>
-
-    <div id='canvasDiv'>
-        <%= javascript_include_tag('Asteroids.js') %>
-    </div>
-
-    <div id='gInfoDiv'>
-      <h3> Game Info </h3>
-        <ul>
-            <li> Current Score </li>
-            <li> Lives </li>
-            <li> Power-Ups </li>
-
-        </ul>
-    </div>
-
-    <div id="userInfoDiv">
-      <h3>User Info</h3>
-    </div
-
-    <div id="scoreBoardDiv">
-      <h3>High Scores</h3>
-    </div>
-
+        <div id='titleDiv'>
+           <img src="/assets/player-2b769c18603d84592d2fb06ba6ae8ed0ddee574356e5a152717f541234278fde.png" class='imageTitle' alt="Player">
+        </div>
+    
+        <div id='controlsDiv'>
+          <h3> Controls </h3>
+        </div>
+        <div id="canvasParent">
+          <div id="phaser-example">
+            <div id='gInfoDiv'>
+              <h3> Game Info </h3>
+                <ul>
+                    <li> Current Score </li>
+                    <li> Lives </li>
+                    <li> Power-Ups </li>
+                </ul>
+            </div>
+          </div>
+        </div>
+    
+        <div id="userInfoDiv">
+          <h3>User Info</h3>
+        </div>
+    
+        <div id="scoreBoardDiv">
+          <h3>High Scores</h3>
+        </div>
+        
+        <div>
+          <% if current_user %>
+            Signed in as <strong><%= current_user.name %></strong>!
+            <%= link_to "Sign out", signout_path, id: "sign_out" %>
+          <% else %>
+            <%= link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in" %>
+          <% end %>
+        </div>
     </div> 
     
-    <div>
-    
-      <% if current_user %>
-        
-        Signed in as <strong><%= current_user.name %></strong>!
-        <%= link_to "Sign out", signout_path, id: "sign_out" %>
-      
-      <% else %>
-        
-        <%= link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in" %>
-      
-      <% end %>
-    </div>
-
+    <%= javascript_include_tag('Asteroids.js') %>
     <%= javascript_include_tag('TitleAnimation.js') %>
   </body>
-
 </html>
-
