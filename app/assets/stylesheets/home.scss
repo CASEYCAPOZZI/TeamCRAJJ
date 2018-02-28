@@ -31,16 +31,60 @@
 #canvasParent{
   order: 2;
   width: 800px;
+}
+  
+#titleDiv > #bullet {
+  position: absolute;
+  left: 418px;
+  top: 26px;
+  background-color: white;
+  border: 1px solid white;
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 20%;
+  border-bottom-right-radius: 20%;
+  width: 10px;
+  height: 2px;
+  display: none;
+  opacity: 0;
+}
+
+#titleDiv  #bullet2 {
+  position: absolute;
+  left: 542px;
+  top: 26px;
+  background-color: white;
+  border: 1px solid white;
+  border-top-left-radius: 20%;
+  border-bottom-left-radius: 20%;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  width: 10px;
+  height: 2px;
+  display: none;
+  opacity: 1;
+  opacity: 0;
+}
+
+#controlsDiv{
+  width: 20.5%;
+  height: 600px;
+  float: left;
+ 
+}
+
+#phaser-example{
+  width: 58%;
   height: 600px;
   margin: auto;
 }
-
+/*
 #phaser-example {
     position: relative;
     width: 100%;
     height: 100%;
     margin: auto;
-}
+}*/
 
 canvas {
     position: absolute;
@@ -90,7 +134,6 @@ canvas {
     }
 }
 
-/*
 #controlsDiv{
   order: 2;
   flex-grow: 1;
@@ -110,11 +153,26 @@ canvas {
     height: 100%;
 }
 
-canvas {
-    position: absolute;
+
+.imageTitle{
+  opacity: 0;
+  position: relative;
+  right: 0;
+  width: 15px;
+  height: 15px;
 }
 
-#gInfoDiv{
+.imageAsteroid{
+  position: absolute;
+  left: -30px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  
+  opacity: 1;
+}
+
+canvas{
   position: absolute;
   top: 0;
   right: 0;
@@ -126,8 +184,7 @@ canvas {
   flex-grow: 1;
 }
 
-#scoreBoardDiv{
+/*#scoreBoardDiv{
   order: 4;
   flex-grow: 1;
-}
-*/
+}*/

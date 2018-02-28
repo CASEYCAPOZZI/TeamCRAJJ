@@ -98,7 +98,6 @@ function Asteroid(xLoc, yLoc, minDistance, maxDistance, numSides, velocity, play
             this.lines[i] = new Phaser.Line(this.points[i].x, this.points[i].y, this.points[0].x, this.points[0].y);
         }
     }
-    
 }
 
 function moveAsteroids(){
@@ -179,7 +178,18 @@ function initKeyboard() {
     
     //Set the "fireBullet" method to be called when the space bar is pressed.
     this.spaceKey.onDown.add(fireBullet, this);
+
+    
+    //This is just temporary. Once everyone undertands what it's doing, we'll
+    //actually create an array of astroids and fill it as we go along.
+    //In this example, though. I'm creating an asteroid centered at the point 300, 200.
+    //It's got a minimum vertex height of 10px and a max vertex height of 100.
+    //I also made it have 10 sides.
+    //You can see the generator in action by refreshing the page a few times
+    //after you load the game. On each refresh, the asteroid will be generated differently.
+    this.asteroid = new Asteroid(300, 200, 10, 100, 10);
 }
+
 
 function initGraphics() {
     //Adds the sprite(spaceShip)
@@ -196,7 +206,6 @@ function create(){
     
 }
 
-
 //An object that allows us to store points in one variable.
 function Point(x, y){
     this.x = x;
@@ -205,6 +214,7 @@ function Point(x, y){
 
 function togglePause() {
     game.physics.arcade.isPaused = !game.physics.arcade.isPaused;
+
 }
 
 function fireBullet() {
@@ -274,6 +284,7 @@ function update(){
 
 function checkPlayerInput() {
         //Pressing UpArrow or W
+
     if (this.cursors.up.isDown || this.wasd.up.isDown) {
         game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
     } else {
@@ -292,7 +303,6 @@ function checkPlayerInput() {
     }
 
     game.world.wrap(spaceShip, 16);
-    game.world.wrap(bullets, 16); // Trying to get the bullets to wrap around..
 }
 
 function checkCollisions(){
@@ -480,6 +490,7 @@ function render() {
     paintAsteroids();
 }
 
+
 //A function that takes in an Asteroid object and paints all of the lines within it.
 function paintAsteroids(){
     for(var j = 0; j < asteroids.length; j++){
@@ -488,4 +499,3 @@ function paintAsteroids(){
         }
     }
 }
-
