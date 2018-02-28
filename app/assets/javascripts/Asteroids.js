@@ -3,6 +3,10 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
     preload: preload, create: create, update: update, render: render
 });
 
+//Phaser.Weapon.prototype = Object.create(Phaser.Plugin.prototype);
+//Phaser.Weapon.prototype.constructor = Phaser.Weapon;
+//Phaser.Weapon.KILL_DISTANCE = 5;
+
 var spaceShip;
 var lives;
 var gameOverText;
@@ -242,6 +246,57 @@ function togglePause() {
 }
 
 
+
+/*
+function fireBullet2(){
+    
+    Phaser.Weapon.prototype.createBullets = function (quantity, key, frame, group) {
+
+    if (quantity === undefined) { quantity = 40; }
+    if (group === undefined) { group = this.game.world; }
+
+    if (!this.bullets)
+    {
+        this.bullets = this.game.add.physicsGroup(Phaser.Physics.ARCADE, group);
+        this.bullets.classType = this._bulletClass;
+    }
+
+    if (quantity !== 0)
+    {
+        if (quantity === -1)
+        {
+            this.autoExpandBulletsGroup = false;
+            quantity = 1;
+        }
+
+        this.bullets.createMultiple(quantity, key, frame);
+
+        this.bullets.setAll('data.bulletManager', this);
+
+        this.bulletKey = key;
+        this.bulletFrame = frame;
+    }
+
+    return this;
+
+}; //End of Phaser.Weapon.prototype.createBullets
+
+Phaser.Weapon.prototype.forEach = function (callback, callbackContext) {
+
+    this.bullets.forEachExists(callback, callbackContext, arguments);
+
+    return this;
+
+};//End of Phaser.Weapon.prototype.forEach
+
+
+};
+
+
+*/
+
+
+
 function fireBullet() {
     
     if (game.time.now > bulletTime) {
@@ -260,7 +315,7 @@ function fireBullet() {
      if (bullet.lifespan == 0){
            bullets.remove();
            // call a function to update how many bullets you have left in the Game Info
-           
+           starfish
       }   
      
 }
@@ -365,7 +420,7 @@ function update(){
        
 
     if(rollPerc > 600 && rollPerc < 620){
-        spawnPowerup();
+       // spawnPowerup();
     }
     movePowerups();
     moveAsteroids();
@@ -635,5 +690,5 @@ function updateBullets(){
 }
 
 function bulletDeath(){
-
+    Phaser.Weapon.KILL_DISTANCE = 10;
 }
