@@ -9,6 +9,7 @@ var spaceShip;
 var lives;
 var gameOverText;
 var asteroids = [];
+var powerups = [];
 var bullets = [];
 var bullet;
 var bulletTime = 0;
@@ -258,7 +259,7 @@ function fireBullet() {
         state = 1;
     } else {
         if(!game.physics.arcade.isPaused){
-          if(bullsLeft > 0){
+          if(bulletsLeft > 0){
             if (game.time.now > bulletTime) {
                 
                 bullet = bullets.getFirstExists(false);
@@ -681,7 +682,7 @@ function updateBullets(){
     
     if(bulletsLeft > -1){
 //     console.log(bulletsLeft);
-        stringBulletsLeft = bulletsLeft.toString();
+        var stringBulletsLeft = bulletsLeft.toString();
         $('#bulletsLeft').html('You Have: ' + stringBulletsLeft + ' left.' );
     }
     
