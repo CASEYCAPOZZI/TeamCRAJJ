@@ -168,6 +168,7 @@ function initPhysics() {
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    
     bullets.createMultiple(40, 'bullet'); // original   bullets.createMultiple(40, 'bullet');
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
@@ -260,6 +261,7 @@ function fireBullet() {
     } else {
         if(!game.physics.arcade.isPaused){
           if(bulletsLeft > 0){
+            updateBullets();
             if (game.time.now > bulletTime) {
                 
                 bullet = bullets.getFirstExists(false);
@@ -274,12 +276,7 @@ function fireBullet() {
             }
           }
         }
-    }
-    
-     if (bullet.lifespan == 0){
-           bullets.remove();
-         
-      }   
+    } 
      
 }
 
@@ -452,13 +449,20 @@ function checkCollisions(){
 
 //A function that checks to see if a bullet collides with an asteroid.
 function checkBulletColls() {
-    bullets.forEach(function(item) {
-        if(checkBulletCollideAsteroid(item)){
-            //Bullet collided with an asteroid
-            bullets.remove(item);
-        }
-        
-    });
+    if(bullets.countLiving() > 0){
+        bullets.forEach(function(item) {
+            console.log(bullets.countLiving());
+            if(checkBulletCollideAsteroid(item)){
+                //Bullet collided with an asteroid
+                bullets.remove(item);
+                updateScore();
+            }
+            if(item.lifetime <= 0){
+                bullets.remove(item);
+            }
+        });
+    }
+
 }
 
 function checkBulletCollideAsteroid(bullet){
@@ -467,7 +471,6 @@ function checkBulletCollideAsteroid(bullet){
             //Bullet collided with asteroid at [i]
             //Add to score
             asteroids.splice(i, 1);
-            updateScore();
             return true;
         }
     }    
@@ -681,7 +684,6 @@ function updateBullets(){
     bulletsLeft -= 1;// removes one bullet everytime this function is called.
     
     if(bulletsLeft > -1){
-//     console.log(bulletsLeft);
         var stringBulletsLeft = bulletsLeft.toString();
         $('#bulletsLeft').html('You Have: ' + stringBulletsLeft + ' left.' );
     }
