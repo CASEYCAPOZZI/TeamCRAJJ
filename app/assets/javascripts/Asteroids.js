@@ -18,6 +18,7 @@ var startLabel;
 var score = 0;
 var gameGoing = true;
 var bulletsLeft = 40;
+var explosions;
 
 function preload() {
     //Load sprites and images
@@ -37,6 +38,9 @@ function preload() {
     game.load.image("healthPower", healthPowerupPath);
     var speedPowerupPath = "assets/powerups/speedUp.png";
     game.load.image("shipSpeedPower", speedPowerupPath);
+    
+    var explosionImagePath = "assets/explosion.png";
+    game.load.image("explosion", explosionImagePath);
    
 }
 
@@ -224,6 +228,8 @@ function create(){
     gameOverText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '60px Arial', fill: '#9999ff' });
     gameOverText.anchor.setTo(0.5, 0.5);
     gameOverText.visible = false;
+    
+    explosions = game.add.group();
 }
 
 function initPlayerLives() {
