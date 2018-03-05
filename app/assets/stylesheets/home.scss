@@ -98,6 +98,26 @@ canvas {
   width: 400px;
 }
 
+#wasd {
+    width: 78%;
+    height: 100px;
+    background-image: url("/assets/wasd.png");
+    background-repeat: no-repeat;
+    background-size: 430px 100px;
+    margin: auto;
+}
+
+#spacebar {
+    width: 242px;
+    height: 35px;
+    background-image: url("/assets/spacebar.jpeg");
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: 270px 50px;
+    background-position: -14px -8px;
+    margin: 10px auto;
+}
+
 #canvasParent{
   order: 2;
   width: 800px;
