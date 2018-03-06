@@ -39,9 +39,11 @@ function preload() {
     var speedPowerupPath = "assets/powerups/speedUp.png";
     game.load.image("shipSpeedPower", speedPowerupPath);
     
-    var explosionImagePath = "assets/explosion.png";
-    game.load.image("explosion", explosionImagePath);
-   
+    //var explosionImagePath = "assets/explosion.png";
+    //game.load.image("explosion", explosionImagePath);
+    
+    game.load.atlasJSONHash('explosion', 'assets/spritesheets/explosionSheet.png', 'assets/spritesheets/explosionSheet.json');
+    //game.load.spritesheet("explosion", "assets/spritesheets/explosionSheet.png", 100, 100)
 }
 
 //This function creates an Asteroid object. To create one you must specify a few things:
@@ -217,6 +219,10 @@ function initGraphics() {
     spaceShip.name = 'spaceShip';
 }
 
+function initExplosion() {
+    spaceShip.animations.add('explosion', Phaser.Animation.generateFrameNames('assets/spritesheets/explosionSheet.png', 1, 3, '', 0), 10);
+}
+
 function create(){
     if(state === 1){
         initGraphics();
@@ -229,7 +235,11 @@ function create(){
     gameOverText.anchor.setTo(0.5, 0.5);
     gameOverText.visible = false;
     
+    // Added this
     explosions = game.add.group();
+    explosions.createMultiple(10, 'explosion');
+    explosions.forEach(initExplosion, this);
+
 }
 
 function initPlayerLives() {
@@ -490,6 +500,11 @@ function checkPlayerColls(){
         
         if (live) {
             live.kill();
+            
+            var explosion = explosions.getFirstExists(false);
+            explosion.reset(spaceShip.body.x, spaceShip.body.y);
+            explosion.play('explosion', 10, false, true);
+            
             spaceShip.reset(400, 300);
         }
         
