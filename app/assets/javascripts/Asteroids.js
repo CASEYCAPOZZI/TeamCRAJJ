@@ -2,6 +2,8 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
     preload: preload, create: create, update: update, render: render
 });
+
+
 var state = 0;
 var stateJustSwitched = true;
 
@@ -786,6 +788,8 @@ function getMaxAndMinPolygon(poly){
 		iterator = poly[i].y;
 		if (maxAndMins[2] < iterator) {
 			maxAndMins[2] = iterator;
+		}
+
 		if (maxAndMins[3] > iterator) {
 			maxAndMins[3] = iterator;
 		}
