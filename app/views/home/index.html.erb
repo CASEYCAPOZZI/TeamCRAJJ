@@ -51,7 +51,7 @@
         <div id="userInfoDiv">
             <h3> Game Info </h3>
             <ul>
-                <li id="gameScore">Your Score: 0</li>
+                <li>Your Score: <span id="gameScore">0</span></li>
                 <!--<li> Power-Ups </li> -->
                 <li id="bulletsLeft">You have: 40 bullets</li> 
             </ul>
@@ -61,14 +61,14 @@
           <h3>High Scores</h3>
         </div>
         
-        <div>
+        <!--<div>
           <% if current_user %>
-            Signed in as <strong><%= current_user.name %></strong>!
+            Signed in as <strong id="user"><%= current_user.name %></strong>!
             <%= link_to "Sign out", signout_path, id: "sign_out" %>
           <% else %>
             <%= link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in" %>
           <% end %>
-        </div>
+        </div>-->
     </div> 
     
     <%= javascript_include_tag('Asteroids.js') %>
