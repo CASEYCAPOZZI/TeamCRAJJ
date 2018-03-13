@@ -37,7 +37,7 @@ var shipSpeed = 300;
  */
 var difficulty = 0; 
 
-var spawnRateForAsteroids = [990, 980, 960, 900, 700]; 
+var spawnRateForAsteroids = [9900, 9800, 9600, 9000, 7000]; 
 /*
  * Asteroid spawn rate averages:
  * 
@@ -49,15 +49,15 @@ var spawnRateForAsteroids = [990, 980, 960, 900, 700];
  */
 
 
-var spawnRateForPowerups = [950, 970, 990, 995, 999];
+var spawnRateForPowerups = [9900, 9950, 9990, 9995, 9999];
 /*
  * Powerup spawn rate averages:
  * 
- * Easy: 5% chance per frame (AKA average of 3 per second or 180 per minute)
- * Medium: 3% chance per frame (AKA average of 1.8 per second or 108 per minute)
- * Hard: 1% chance per frame (AKA average of 0.6 per second or 36 per minute)
- * Very Hard: 0.5% chance per frame (AKA average of 0.3 per second or 18 per minute)
- * Insane: 0.1% chance per frame (AKA average of 0.06 per second or 3.6 per minute)
+ * Easy: 1% chance per frame (AKA average of 0.6 per second or 36 per minute)
+ * Medium: 0.5% chance per frame (AKA average of 0.12 per second or 18 per minute)
+ * Hard: 0.1% chance per frame (AKA average of 0.06 per second or 3.6 per minute)
+ * Very Hard: 0.05% chance per frame (AKA average of 0.03 per second or 1.8 per minute)
+ * Insane: 0.01% chance per frame (AKA average of 0.006 per second or 0.36 per minute)
  */
 
 
@@ -504,11 +504,11 @@ function update(){
 
 
 
-              if(getNumberFrom1to1000() > spawnRateForAsteroids[difficulty]){
+              if(getNumberFrom1to10000() > spawnRateForAsteroids[difficulty]){
                   spawnAsteroid();
               }
 
-              if(getNumberFrom1to1000() > spawnRateForPowerups[difficulty]){
+              if(getNumberFrom1to10000() > spawnRateForPowerups[difficulty]){
                   spawnPowerup();
               }   
               
@@ -521,8 +521,8 @@ function update(){
         }
 }
 
-function getNumberFrom1to1000() {
-    return Math.floor((Math.random() * 999) + 1);
+function getNumberFrom1to10000() {
+    return Math.floor((Math.random() * 9999) + 1);
 }
 
 function checkPlayerInput() {
@@ -649,6 +649,9 @@ function resetPowerupsAndAsteroids(){
     bulletSpeed = 400;
     shipSpeed = 300;
     asteroids = [];
+    for(var i = 0; i < powerups.length; i++){
+        powerups[i].sprite.destroy();
+    }
     powerups = [];
 }
 
@@ -805,6 +808,7 @@ function checkPlayerCollidePowerup(){
     for(var i = 0; i < this.powerups.length; i++){
         if(doesPlayerCollideWithPowerup(this.powerups[i].sprite)){
             collidedPowerup = powerups[i];
+            powerups[i].sprite.destroy();
             powerups.splice(i, 1);
             return true;
         }
