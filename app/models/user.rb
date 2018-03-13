@@ -12,4 +12,15 @@ class User < ActiveRecord::Base
       user.save!
     end
   end
+  
+  def update
+    user = User.find(params[:uid])
+    
+    if user.update(user_params)
+      redirect_to user
+    else
+    
+    end
+  end
+  
 end
