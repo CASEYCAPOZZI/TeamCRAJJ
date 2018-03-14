@@ -58,6 +58,20 @@
     
         <div id="scoreBoardDiv">
           <h3>High Scores</h3>
+          <% if current_user %>
+              <%= javascript_tag do %>
+                window.usersURL = "<%=j "/" + current_user.name %>";
+                
+               <!-- > Users.find_each(:all, :order => "uid desc", :limit => 10) do |user| -->
+              <!--      user.name + " " + user.hs_score -->
+                   
+                   userArray = []
+                   
+                   user_array.each |user|
+                   user.name + " " + user.score
+                   end
+              <% end %>
+          <% end %>
         </div>
         
         <div>
