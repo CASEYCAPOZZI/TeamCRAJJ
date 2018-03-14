@@ -576,6 +576,7 @@ function checkBulletColls() {
             if(checkBulletCollideAsteroid(item)){
                 //Bullet collided with an asteroid
                 bullets.remove(item);
+                bulletsLeft += 1;
                 updateScore();
             }
             if(item.lifetime <= 0){
