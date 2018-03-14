@@ -2,6 +2,8 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', {
     preload: preload, create: create, update: update, render: render
 });
+
+
 var state = 0;
 var stateJustSwitched = true;
 
@@ -9,6 +11,7 @@ var spaceShip;
 var lives;
 var gameOverText;
 var asteroids = [];
+var powerups = [];
 var bullets = [];
 var bullet;
 var bulletTime = 0;
@@ -17,6 +20,46 @@ var startLabel;
 var score = 0;
 var gameGoing = true;
 var bulletsLeft = 40;
+
+var collidedPowerup;
+var bulletFireAmount = 1;
+var bulletLifespan = 2000;
+var bulletSpeed = 400;
+var shipSpeed = 300;
+
+/*
+ * Difficulty Levels are
+ * 0 = Easy
+ * 1 = Medium
+ * 2 = Hard
+ * 3 = Very Hard
+ * 4 = Insane
+ */
+var difficulty = 0; 
+
+var spawnRateForAsteroids = [9900, 9800, 9600, 9000, 7000]; 
+/*
+ * Asteroid spawn rate averages:
+ * 
+ * Easy: 1% chance per frame (AKA average of 0.6 per second or 36 per minute)
+ * Medium: 2% chance per frame (AKA average of 1.2 per second or 72 per minute)
+ * Hard: 4% chance per frame (AKA average of 2.4 per second or 144 per minute)
+ * Very Hard: 10% chance per frame (AKA average of 6 per second or 360 per minute)
+ * Insane: 30% chance per frame (AKA average of 18 per second or 1080 per minute)
+ */
+
+
+var spawnRateForPowerups = [9900, 9950, 9990, 9995, 9999];
+/*
+ * Powerup spawn rate averages:
+ * 
+ * Easy: 1% chance per frame (AKA average of 0.6 per second or 36 per minute)
+ * Medium: 0.5% chance per frame (AKA average of 0.12 per second or 18 per minute)
+ * Hard: 0.1% chance per frame (AKA average of 0.06 per second or 3.6 per minute)
+ * Very Hard: 0.05% chance per frame (AKA average of 0.03 per second or 1.8 per minute)
+ * Insane: 0.01% chance per frame (AKA average of 0.006 per second or 0.36 per minute)
+ */
+
 
 function preload() {
     //Load sprites and images
@@ -167,6 +210,7 @@ function initPhysics() {
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    
     bullets.createMultiple(40, 'bullet'); // original   bullets.createMultiple(40, 'bullet');
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
@@ -258,27 +302,94 @@ function fireBullet() {
         state = 1;
     } else {
         if(!game.physics.arcade.isPaused){
-          if(bullsLeft > 0){
+          if(bulletsLeft > 0){
+            updateBullets(-1);
             if (game.time.now > bulletTime) {
                 
                 bullet = bullets.getFirstExists(false);
                 
+                
                 if (bullet) {
                     bullet.reset(spaceShip.x, spaceShip.y);
-                    bullet.lifespan = 2000;
+                    bullet.lifespan = bulletLifespan;
                     bullet.rotation = spaceShip.rotation - (Math.PI / 2.0);
-                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), 400, bullet.body.velocity);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 2.0), bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+                bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 1 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation - (Math.PI / 4.0);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI / 4.0), bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+                bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 2 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation - (Math.PI * 0.75);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI * 0.75), bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+               bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 3 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation;
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation, bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+                bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 4 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation - Math.PI;
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - Math.PI, bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+               bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 5 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation + (Math.PI / 4);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation + (Math.PI / 4), bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+                bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 6 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation - (Math.PI * 1.25);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI * 1.25), bulletSpeed, bullet.body.velocity);
+                    bulletTime = game.time.now + 100;
+                }
+                
+                bullet = bullets.getFirstExists(false);
+                
+                if(bulletFireAmount > 7 && bullet){
+                    bullet.reset(spaceShip.x, spaceShip.y);
+                    bullet.lifespan = bulletLifespan;
+                    bullet.rotation = spaceShip.rotation + (Math.PI * 0.5);
+                    game.physics.arcade.velocityFromRotation(spaceShip.rotation - (Math.PI * 0.5), bulletSpeed, bullet.body.velocity);
                     bulletTime = game.time.now + 100;
                 }
             }
           }
         }
-    }
-    
-     if (bullet.lifespan == 0){
-           bullets.remove();
-         
-      }   
+    } 
      
 }
 
@@ -331,7 +442,8 @@ function powerUp(type){
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.rotation = Math.random() * (Math.PI * 2);
     this.sprite.name = this.name;
-    this.sprite.lifespan = 3000;
+    this.sprite.lifespan = 6000;
+    this.sprite.scale.setTo(2.0, 2.0);
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.drag.set(70);
     this.sprite.body.maxVelocity.set(500);
@@ -392,11 +504,14 @@ function update(){
 
 
 
-              var rollPerc = Math.floor((Math.random() * 999) + 1);
-
-              if(rollPerc > 990){
+              if(getNumberFrom1to10000() > spawnRateForAsteroids[difficulty]){
                   spawnAsteroid();
               }
+
+              if(getNumberFrom1to10000() > spawnRateForPowerups[difficulty]){
+                  spawnPowerup();
+              }   
+              
               movePowerups();
               moveAsteroids();
               checkCollisions();
@@ -406,12 +521,16 @@ function update(){
         }
 }
 
+function getNumberFrom1to10000() {
+    return Math.floor((Math.random() * 9999) + 1);
+}
+
 function checkPlayerInput() {
         //Pressing UpArrow or W
     if(state === 1){
 
       if (this.cursors.up.isDown || this.wasd.up.isDown) {
-          game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
+          game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), shipSpeed, spaceShip.body.acceleration);
       } else {
           spaceShip.body.acceleration.set(0);
       }
@@ -422,7 +541,7 @@ function checkPlayerInput() {
 
       } else {
           if (this.cursors.up.isDown || this.wasd.up.isDown) {
-              game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), 300, spaceShip.body.acceleration);
+              game.physics.arcade.accelerationFromRotation(spaceShip.rotation - (Math.PI / 2.0), shipSpeed, spaceShip.body.acceleration);
           } else {
               spaceShip.body.acceleration.set(0);
           }
@@ -451,13 +570,20 @@ function checkCollisions(){
 
 //A function that checks to see if a bullet collides with an asteroid.
 function checkBulletColls() {
-    bullets.forEach(function(item) {
-        if(checkBulletCollideAsteroid(item)){
-            //Bullet collided with an asteroid
-            bullets.remove(item);
-        }
-        
-    });
+    if(bullets.countLiving() > 0){
+        bullets.forEach(function(item) {
+            console.log(bullets.countLiving());
+            if(checkBulletCollideAsteroid(item)){
+                //Bullet collided with an asteroid
+                bullets.remove(item);
+                updateScore();
+            }
+            if(item.lifetime <= 0){
+                bullets.remove(item);
+            }
+        });
+    }
+
 }
 
 function checkBulletCollideAsteroid(bullet){
@@ -466,7 +592,6 @@ function checkBulletCollideAsteroid(bullet){
             //Bullet collided with asteroid at [i]
             //Add to score
             asteroids.splice(i, 1);
-            updateScore();
             return true;
         }
     }    
@@ -489,7 +614,7 @@ function checkPlayerColls(){
         if (lives.countLiving() < 1) {
             spaceShip.kill();
             gameGoing = false;
-            
+            resetPowerupsAndAsteroids();
             gameOverText.text="   Game Over! \n Click to restart";
             gameOverText.visible = true;
             
@@ -499,9 +624,35 @@ function checkPlayerColls(){
     }
     
     if(checkPlayerCollidePowerup()){
-        //Player collided with powerup
-        //starfruit
+        if(this.collidedPowerup !== null){
+            var power = this.collidedPowerup.name;
+            if(power === "ammoPower"){
+                updateBullets(20);
+            } else if(power === "bulletPower"){
+                bulletFireAmount += 1;
+            } else if(power === "bulletSpeedPower"){
+                bulletSpeed += 100;
+            } else if(power === "healthPower"){
+                lives.callAll('revive');
+            } else if(power === "shipSpeedPower"){
+                shipSpeed += 500;
+            }
+
+
+        }
     }
+}
+
+function resetPowerupsAndAsteroids(){
+    bulletFireAmount = 1;
+    bulletLifespan = 2000;
+    bulletSpeed = 400;
+    shipSpeed = 300;
+    asteroids = [];
+    for(var i = 0; i < powerups.length; i++){
+        powerups[i].sprite.destroy();
+    }
+    powerups = [];
 }
 
 function restartGame () {   
@@ -520,6 +671,12 @@ function checkPlayerCollideAsteroid(){
         }
     }    
     return false;
+}
+
+function doesPlayerCollideWithPowerup(powerup) {
+    var powerPoints = [new Point(powerup.x, powerup.y), new Point(powerup.x + powerup.width, powerup.y), new Point(powerup.x + powerup.width, powerup.y + powerup.height), new Point(powerup.x, powerup.y + powerup.height)];
+    var playerPoints = [new Point(this.spaceShip.x, this.spaceShip.y), new Point(this.spaceShip.x + this.spaceShip.width, this.spaceShip.y), new Point(this.spaceShip.x + this.spaceShip.width, this.spaceShip.y + this.spaceShip.height), new Point(this.spaceShip.x, this.spaceShip.y + this.spaceShip.height)];
+    return polygonIntersectsPolygon(powerPoints, playerPoints);
 }
 
 function doesBulletCollideWithAsteroid(bull, aster){
@@ -635,6 +792,7 @@ function getMaxAndMinPolygon(poly){
 		if (maxAndMins[2] < iterator) {
 			maxAndMins[2] = iterator;
 		}
+
 		if (maxAndMins[3] > iterator) {
 			maxAndMins[3] = iterator;
 		}
@@ -647,7 +805,14 @@ function getMaxAndMinPolygon(poly){
 
 
 function checkPlayerCollidePowerup(){
-    // starfruit
+    for(var i = 0; i < this.powerups.length; i++){
+        if(doesPlayerCollideWithPowerup(this.powerups[i].sprite)){
+            collidedPowerup = powerups[i];
+            powerups[i].sprite.destroy();
+            powerups.splice(i, 1);
+            return true;
+        }
+    }    
     return false;
 }
 
@@ -675,13 +840,12 @@ function updateScore(){
     $('#gameScore').html("Your Score: " + stringScore);
 }
 
-function updateBullets(){
+function updateBullets(numToUpdate){
     //This shows how many bullets you have left on the HTML side of things.
-    bulletsLeft -= 1;// removes one bullet everytime this function is called.
+    bulletsLeft += numToUpdate;// removes one bullet everytime this function is called.
     
     if(bulletsLeft > -1){
-//     console.log(bulletsLeft);
-        stringBulletsLeft = bulletsLeft.toString();
+        var stringBulletsLeft = bulletsLeft.toString();
         $('#bulletsLeft').html('You Have: ' + stringBulletsLeft + ' left.' );
     }
     
