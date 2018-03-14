@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180306002934) do
+ActiveRecord::Schema.define(version: 20180226003852) do
 
   create_table "users", force: :cascade do |t|
     t.string   "provider"
@@ -19,16 +19,8 @@ ActiveRecord::Schema.define(version: 20180306002934) do
     t.string   "name"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.integer  "hs_score"
-    t.integer  "hs_bullets_used"
-    t.integer  "hs_num_deaths"
-    t.boolean  "current_game_exists"
-    t.integer  "current_score"
-    t.integer  "current_lives"
-    t.integer  "current_deaths"
-    t.integer  "current_bullets"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
 end
