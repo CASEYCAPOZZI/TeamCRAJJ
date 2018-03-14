@@ -10,8 +10,9 @@
   font-family: Copperplate, Copperplate Gothic Light, fantasy;
   color: white;
   text-shadow: 1px 1px 1px #000;
-  min-width: 800px;
+  width: 1600px;
   align-items: stretch;
+  margin: auto;
 }
 
 #titleDiv{
@@ -20,22 +21,9 @@
   height: 74px;
   text-align: center;
   position: relative;
-}
-
-.imageTitle{
-  opacity: 0;
-  position: relative;
-  right: 0;
-}
-
-#canvasParent{
-  order: 2;
-  width: 800px;
-}
-  
-#titleDiv{
   font-size: 60px;
 }
+
 #titleDiv > #bullet {
   position: absolute;
   left: 418px;
@@ -69,28 +57,15 @@
   opacity: 0;
 }
 
-#controlsDiv{
-  width: 20.5%;
-  height: 600px;
-  float: left;
-}
-
 #controlsDiv > h3{
    text-align: center;
 }
 
 #phaser-example{
-  width: 58%;
+  width: 800px;
   height: 600px;
   margin: auto;
 }
-/*
-#phaser-example {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-}*/
 
 canvas {
     position: absolute;
@@ -103,14 +78,10 @@ canvas {
   z-index: 10;
 }
 
-#controlsDiv{
-  order: 2;
-  flex-grow: 1;
-}
 
 #userInfoDiv {
   order: 3;
-  flex-grow: 1;
+  width: 400px;
 }
 
 #userInfoDiv > h3{
@@ -119,34 +90,32 @@ canvas {
 
 #scoreBoardDiv {
   order: 4;
-
-}
-
-@media (max-width: 1150px) {
-    
-    #controlsDiv{
-      width: 100%;
-    }
-    
-    #userInfoDiv{
-      width: 50%;
-    }
-    
-    #scoreBoardDiv{
-      width: 50%
-    }
-}
-
-@media (min-width: 1151px) and (max-width: 1300px) {
-    
-    #scoreBoardDiv{
-      width: 100%;
-    }
+  width: 100%;
 }
 
 #controlsDiv{
   order: 2;
-  flex-grow: 1;
+  width: 400px;
+}
+
+#wasd {
+    width: 78%;
+    height: 100px;
+    background-image: url("/assets/wasd.png");
+    background-repeat: no-repeat;
+    background-size: 430px 100px;
+    margin: auto;
+}
+
+#spacebar {
+    width: 242px;
+    height: 35px;
+    background-image: url("/assets/spacebar.jpeg");
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: 270px 50px;
+    background-position: -14px -8px;
+    margin: 10px auto;
 }
 
 #canvasParent{
@@ -163,7 +132,6 @@ canvas {
     height: 100%;
 }
 
-
 .imageTitle{
   opacity: 0;
   position: relative;
@@ -172,29 +140,9 @@ canvas {
   height: 15px;
 }
 
-.imageAsteroid{
-  position: absolute;
-  left: -30px;
-  top: 15px;
-  width: 30px;
-  height: 30px;
-  
-  opacity: 1;
-}
-
 canvas{
   position: absolute;
   top: 0;
   right: 0;
   z-index: 10;
 }
-
-#userInfoDiv{
-  order: 3;
-  flex-grow: 1;
-}
-
-/*#scoreBoardDiv{
-  order: 4;
-  flex-grow: 1;
-}*/
