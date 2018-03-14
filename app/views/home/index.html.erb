@@ -61,14 +61,14 @@
           <h3>High Scores</h3>
         </div>
         
-        <!--<div>
+        <div>
           <% if current_user %>
             Signed in as <strong id="user"><%= current_user.name %></strong>!
             <%= link_to "Sign out", signout_path, id: "sign_out" %>
           <% else %>
             <%= link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in" %>
           <% end %>
-        </div>-->
+        </div>
     </div> 
     
     <%= javascript_include_tag('Asteroids.js') %>
