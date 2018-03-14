@@ -619,6 +619,8 @@ function checkPlayerColls(){
             gameOverText.text="   Game Over! \n Click to restart";
             gameOverText.visible = true;
             
+//            addScoretoDb();
+            
             //the "click to restart" handler
             game.input.onTap.addOnce(restartGame,this);
         }
@@ -838,7 +840,7 @@ function updateScore(){
     // and an asteroid.
     score += 10;
     var stringScore = score.toString();
-    $('#gameScore').html("Your Score: " + stringScore);
+    $('#gameScore').html(stringScore);
 }
 
 function updateBullets(numToUpdate){
@@ -859,3 +861,14 @@ function newGameInfo(){
     $('#gameScore').html("Your Score: " + score);
 
 }
+
+//function addScoretoDb() {
+//    var currentUser = documnet.getElementById("user");
+//    var currentUserScore = document.getElementById("gameScore");
+//    $.ajax({
+//        url: '/' + currentUser,
+//        
+//    })''
+//    
+//    
+//}
