@@ -21,6 +21,9 @@ var score = 0;
 var gameGoing = true;
 var bulletsLeft = 40;
 
+var upSwitch = true;
+var downSwitch = true;
+
 var collidedPowerup;
 var bulletFireAmount = 1;
 var bulletLifespan = 2000;
@@ -479,6 +482,7 @@ function update(){
             titleLabel = game.add.text(220, 80, "Asteroid Shooter", {font: "50px Arial", fill: "#fff"});
             startLabel = game.add.text(250, 300, "Press the space bar to start!", {font: "25px Arial", fill: "#fff"});
         }
+        checkPlayerInput();
     } else if(state === 1 && gameGoing){
         //Game State
         
@@ -526,6 +530,30 @@ function getNumberFrom1to10000() {
 }
 
 function checkPlayerInput() {
+    if(state === 0){
+        if((this.cursors.up.isDown || this.wasd.up.isDown) && upSwitch) {
+            upSwitch = false;
+            difficulty += 1;
+            if(difficulty > 4){
+                difficulty = 4;
+            }
+            console.log(difficulty);
+        } else if(!this.cursors.up.isDown && !this.wasd.up.isDown){
+            upSwitch = true;
+        }
+        
+        if((this.cursors.down.isDown || this.wasd.down.isDown) && downSwitch) {
+            downSwitch = false;
+            difficulty -= 1;
+            if(difficulty < 0){
+                difficulty = 0;
+            }
+            console.log(difficulty);
+        } else if (!this.cursors.down.isDown && !this.wasd.down.isDown){
+            downSwitch = true;
+        }
+    }
+    
         //Pressing UpArrow or W
     if(state === 1){
 
